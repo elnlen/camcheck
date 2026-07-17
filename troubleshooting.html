@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Webカメラが映らない時の対処法 — トラブルシューティング | CamCheck</title>
+<meta name="description" content="Webカメラが映らない・許可が出ない・画質が悪いなど、よくあるカメラトラブルの原因と対処法をWindows・macOS・ブラウザ別にまとめました。" />
+<meta name="keywords" content="webカメラ 映らない, カメラ 認識しない, カメラ 許可 出ない, カメラ 真っ黒" />
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX" />
+<link rel="canonical" href="https://example.github.io/troubleshooting.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
+      <span id="navToggleLabel">メニュー</span>
+      <span class="nav-toggle-icon">⌄</span>
+    </button>
+  </div>
+  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+      <a href="index.html">Webカメラテスト</a>
+      <a href="show-camera.html">カメラ情報</a>
+      <a href="photo-capture.html">写真撮影</a>
+      <a href="resolution-test.html">解像度テスト</a>
+      <a href="call-readiness.html">通話前チェック</a>
+      <a href="qr-scanner.html">QRスキャナー</a>
+      <a href="green-screen.html">背景合成</a>
+      <a href="troubleshooting.html" aria-current="page">トラブル解決</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0;">
+    <div class="hero-kicker">● Troubleshooting</div>
+    <h1>Webカメラが映らない時の対処法</h1>
+    <p class="lead">よくある原因は「許可設定」「他アプリによる占有」「ドライバ」「OSのプライバシー設定」のいずれかです。体感では、この4つで9割方は片付きます。上から順に確認すれば、ほとんどのケースは数分で解決するはずです。まずは<a href="index.html">Webカメラテスト</a>で症状を再現してから、該当する項目をお試しください。</p>
+  </section>
+
+  <section class="article" style="margin-top:24px;">
+
+    <h2>症状別チェックリスト</h2>
+
+    <h3>1. 映像が真っ黒・何も映らない</h3>
+    <ul>
+      <li>ブラウザのアドレスバー付近にあるカメラアイコンから、このサイトへのアクセスが「許可」になっているか確認する。</li>
+      <li>Zoom・Teams・Google Meet・OBSなど、カメラを使う他のアプリがすべて閉じているか確認する（カメラは同時に1アプリしか使えない場合が多い）。</li>
+      <li>ノートPCのカメラに物理シャッターやカバーが付いている場合、閉じていないか確認する。</li>
+    </ul>
+
+    <h3>2. 許可ダイアログが出てこない</h3>
+    <p>一度「ブロック」を選んでしまうと、ブラウザはその選択を記憶し、次回以降ダイアログを表示しません。以下の手順で個別サイトの設定をリセットしてください。</p>
+    <ul>
+      <li><strong>Chrome / Edge:</strong> アドレスバー左のアイコンをクリック →「サイトの設定」→ カメラを「許可」に変更 → ページを再読み込み。</li>
+      <li><strong>Firefox:</strong> アドレスバーの盾アイコンまたは鍵アイコン →「許可設定」→ ブロックを解除。</li>
+      <li><strong>Safari:</strong> メニューバーの「Safari」→「このWebサイトの設定」→ カメラを「許可」に変更。</li>
+    </ul>
+
+    <h3>3. カメラが一覧に出てこない・認識されない</h3>
+    <ul>
+      <li>USBカメラの場合は一度抜き差しし、別のUSBポートも試す。</li>
+      <li>デバイスマネージャー（Windows）またはシステム情報（macOS）でカメラが認識されているか確認する。</li>
+      <li>OS更新直後は権限がリセットされることがあるため、下記のOS設定を再確認する。</li>
+    </ul>
+
+    <h3>4. 画質が粗い・解像度が低い</h3>
+    <p><a href="resolution-test.html">解像度テスト</a>で実際に対応している解像度を確認してください。内蔵カメラの多くは720pが上限です。USB帯域が不足している場合は、他のUSBデバイスを一時的に外すと改善することがあります。</p>
+
+    <h3>5. カクつく・フレームレートが低い</h3>
+    <p>低照度の環境ではカメラが露出を稼ぐためにフレームレートを自動的に落とすことがあります。部屋を明るくするか、デスクライトを正面に置いてみてください。CPU負荷が高い状態（他の重い処理が動いている）でもフレームレートが低下します。</p>
+
+    <h2>OS別のプライバシー設定</h2>
+
+    <h3>Windows 10 / 11</h3>
+    <ol>
+      <li>「設定」→「プライバシーとセキュリティ」→「カメラ」を開く。</li>
+      <li>「アプリがカメラにアクセスできるようにする」をオンにする。</li>
+      <li>「デスクトップアプリがカメラにアクセスできるようにする」もオンにし、使用しているブラウザが許可リストに含まれているか確認する。</li>
+    </ol>
+
+    <h3>macOS</h3>
+    <ol>
+      <li>「システム設定」→「プライバシーとセキュリティ」→「カメラ」を開く。</li>
+      <li>使用しているブラウザ（Chrome、Safari、Firefoxなど）にチェックが入っているか確認する。</li>
+      <li>変更後はブラウザを再起動しないと反映されない場合があります。</li>
+    </ol>
+
+    <h2>それでも解決しない場合</h2>
+    <p>ハードウェア自体の故障が疑われます。別のブラウザ、別のUSBポート、可能であれば別のPCでカメラを試し、どの環境でも映らない場合はカメラ本体またはケーブルの故障を疑ってください。</p>
+
+    <div class="callout">
+      すべてのトラブルシューティングを試しても解決しない場合は、まず<a href="index.html">Webカメラテスト</a>のステータスメッセージに表示されるエラー内容（NotAllowedError、NotFoundErrorなど）を確認すると、原因を絞り込みやすくなります。
+    </div>
+
+  </section>
+
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">ブラウザだけで完結する、無料のWebカメラ・写真撮影・解像度診断ツール集です。</p>
+      </div>
+      <div>
+        <h4>カメラツール</h4>
+        <ul>
+          <li><a href="index.html">Webカメラテスト</a></li>
+          <li><a href="show-camera.html">カメラ情報</a></li>
+          <li><a href="photo-capture.html">写真撮影</a></li>
+          <li><a href="resolution-test.html">解像度テスト</a></li>
+          <li><a href="call-readiness.html">通話前チェック</a></li>
+          <li><a href="qr-scanner.html">QRスキャナー</a></li>
+          <li><a href="green-screen.html">背景合成テスト</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サイト</h4>
+        <ul><li><a href="sitemap.html">サイトマップ</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/nav.js"></script>
+
+</body>
+</html>

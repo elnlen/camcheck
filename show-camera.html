@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>カメラ情報を表示 — 接続中のWebカメラの詳細を確認 | CamCheck</title>
+<meta name="description" content="今使えるWebカメラを一覧表示し、解像度上限・フレームレート上限などの詳細スペックを確認できる無料ツール。" />
+<meta name="keywords" content="カメラ デバイス名 確認, webカメラ スペック, カメラ 一覧 表示" />
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX" />
+<link rel="canonical" href="https://example.github.io/show-camera.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
+      <span id="navToggleLabel">メニュー</span>
+      <span class="nav-toggle-icon">⌄</span>
+    </button>
+  </div>
+  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+      <a href="index.html">Webカメラテスト</a>
+      <a href="show-camera.html" aria-current="page">カメラ情報</a>
+      <a href="photo-capture.html">写真撮影</a>
+      <a href="resolution-test.html">解像度テスト</a>
+      <a href="call-readiness.html">通話前チェック</a>
+      <a href="qr-scanner.html">QRスキャナー</a>
+      <a href="green-screen.html">背景合成</a>
+      <a href="troubleshooting.html">トラブル解決</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Device inventory</div>
+    <h1>カメラ情報 — 接続中のWebカメラをすべて表示</h1>
+    <p class="lead">このページを開くと、端末に接続されているカメラを自動的に検出します。デバイス名、対応解像度の上限、フレームレート上限を一覧で確認できます。外付けカメラを買い替えるかどうか迷っているときにも、意外とこの数値だけで判断がついたりします。</p>
+
+    <div class="controls" style="margin-top:0;">
+      <button class="btn btn-primary" id="scanBtn">カメラをスキャン</button>
+      <span class="status-msg" id="statusMsg"></span>
+    </div>
+
+    <div id="deviceList" style="margin-top:24px;display:grid;gap:14px;"></div>
+  </section>
+
+
+  <section class="article">
+    <h2>このツールでわかること</h2>
+    <ul>
+      <li><strong>デバイス名</strong> — OSがカメラに割り当てているラベル。複数台接続時に区別するために使います。</li>
+      <li><strong>最大解像度</strong> — カメラが理論上出力できるもっとも高い解像度。実際の配信解像度はアプリ側の設定に依存します。</li>
+      <li><strong>最大フレームレート</strong> — 1秒あたりに出力できる最大コマ数。値が高いほど滑らかな映像になります。</li>
+      <li><strong>ズーム／フォーカス対応</strong> — ブラウザ経由で制御できる機能があるかどうか。</li>
+    </ul>
+
+    <div class="callout">
+      ブラウザによっては、許可を与える前はデバイス名が「camera 1」のように匿名化されます。詳細を見るには、一度「カメラをスキャン」でアクセスを許可してください。
+    </div>
+
+    <h2>複数のカメラが認識されない場合</h2>
+    <p>ノートPCの内蔵カメラと外付けUSBカメラを両方接続している場合でも、ブラウザは基本的にすべてのデバイスを列挙します。一覧に一部しか表示されない場合は、OSの設定でカメラへのアプリアクセスが許可されているか、他のアプリがデバイスを排他的に使用していないかを確認してください。より詳しい手順は<a href="troubleshooting.html">トラブルシューティングガイド</a>にまとめています。</p>
+
+    <h2>よくある質問</h2>
+    <div class="faq-item">
+      <h3>なぜ最初はデバイス名が表示されないのですか？</h3>
+      <p>プライバシー保護のため、ブラウザはカメラへのアクセス許可を得るまで詳細なデバイス名を隠す仕様になっています。「カメラをスキャン」を押して許可すると、正式なデバイス名が表示されます。</p>
+    </div>
+    <div class="faq-item">
+      <h3>外付けカメラと内蔵カメラを同時に使えますか？</h3>
+      <p>一覧からデバイスを切り替えて個別にテストすることはできますが、通常のビデオ通話アプリと同様、同時に配信できるのは1台のみです。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">ブラウザだけで完結する、無料のWebカメラ・写真撮影・解像度診断ツール集です。</p>
+      </div>
+      <div>
+        <h4>カメラツール</h4>
+        <ul>
+          <li><a href="index.html">Webカメラテスト</a></li>
+          <li><a href="show-camera.html">カメラ情報</a></li>
+          <li><a href="photo-capture.html">写真撮影</a></li>
+          <li><a href="resolution-test.html">解像度テスト</a></li>
+          <li><a href="call-readiness.html">通話前チェック</a></li>
+          <li><a href="qr-scanner.html">QRスキャナー</a></li>
+          <li><a href="green-screen.html">背景合成テスト</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サイト</h4>
+        <ul><li><a href="sitemap.html">サイトマップ</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/camera-utils.js"></script>
+<script>
+(() => {
+  const scanBtn = document.getElementById("scanBtn");
+  const deviceList = document.getElementById("deviceList");
+  const statusMsg = document.getElementById("statusMsg");
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  function renderCard(dev, settings) {
+    const caps = settings ? settings.capabilities : {};
+    const maxW = caps && caps.width ? caps.width.max : null;
+    const maxH = caps && caps.height ? caps.height.max : null;
+    const maxFps = caps && caps.frameRate ? Math.round(caps.frameRate.max) : null;
+
+    const div = document.createElement("div");
+    div.className = "spec-sheet";
+    div.innerHTML = `
+      <div class="spec-sheet-head"><span>${dev.label || "Unnamed camera"}</span><span>${dev.deviceId ? dev.deviceId.slice(0,10) + "…" : ""}</span></div>
+      <div class="spec-grid">
+        <div class="spec-item"><div class="k">最大解像度</div><div class="v ${maxW ? "pass" : ""}">${maxW && maxH ? maxW + "×" + maxH : "不明（許可待ち）"}</div></div>
+        <div class="spec-item"><div class="k">最大フレームレート</div><div class="v ${maxFps ? "pass" : ""}">${maxFps ? maxFps + " fps" : "不明"}</div></div>
+        <div class="spec-item"><div class="k">ズーム対応</div><div class="v">${caps && caps.zoom ? "対応" : "非対応 / 不明"}</div></div>
+        <div class="spec-item"><div class="k">向き</div><div class="v">${settings && settings.facingMode ? settings.facingMode : "デスクトップ / 不明"}</div></div>
+      </div>`;
+    return div;
+  }
+
+  scanBtn.addEventListener("click", async () => {
+    setStatus("スキャン中…");
+    deviceList.innerHTML = "";
+    try {
+      // Requesting a throwaway stream first unlocks full device labels.
+      const tempStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const devices = await CamCheck.listCameras();
+
+      if (devices.length === 0) {
+        setStatus("カメラが見つかりませんでした。", "error");
+      } else {
+        setStatus(`${devices.length} 台のカメラを検出しました`, "ok");
+      }
+
+      const activeSettings = CamCheck.readTrackSettings(tempStream);
+
+      devices.forEach((dev, i) => {
+        const settings = i === 0 ? activeSettings : null;
+        deviceList.appendChild(renderCard(dev, settings));
+      });
+
+      tempStream.getTracks().forEach((t) => t.stop());
+    } catch (err) {
+      if (err.name === "NotAllowedError") {
+        setStatus("アクセスが拒否されました。ブラウザの許可設定を確認してください。", "error");
+      } else {
+        setStatus("エラー: " + err.message, "error");
+      }
+    }
+  });
+})();
+</script>
+
+<script src="js/nav.js"></script>
+
+</body>
+</html>

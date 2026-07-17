@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>グリーンスクリーン・背景合成テスト — カメラでクロマキー確認 | CamCheck</title>
+<meta name="description" content="お手持ちのグリーンバック（またはブルーバック）とWebカメラで、リアルタイムのクロマキー合成をブラウザ上でテストできる無料ツール。" />
+<meta name="keywords" content="グリーンスクリーン テスト, クロマキー オンライン, カメラ 背景合成, バーチャル背景 確認" />
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX" />
+<link rel="canonical" href="https://example.github.io/green-screen.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  .gs-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+  }
+  .gs-field {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .gs-field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 10px;
+  }
+  .swatch-row { display: flex; align-items: center; gap: 10px; }
+  .swatch {
+    width: 30px; height: 30px; border-radius: 50%;
+    border: 2px solid var(--line); cursor: pointer; flex: none;
+  }
+  .swatch.active { border-color: var(--focus); }
+  input[type="range"] { width: 100%; accent-color: var(--focus); }
+  input[type="color"] {
+    width: 40px; height: 32px; border: 1px solid var(--line);
+    border-radius: 4px; background: none; padding: 0; cursor: pointer;
+  }
+  .bg-mode-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .bg-mode-row button {
+    font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase;
+    padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line);
+    background: transparent; color: var(--text-dim); cursor: pointer;
+  }
+  .bg-mode-row button.active { border-color: var(--focus); color: var(--focus); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
+      <span id="navToggleLabel">メニュー</span>
+      <span class="nav-toggle-icon">⌄</span>
+    </button>
+  </div>
+  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+      <a href="index.html">Webカメラテスト</a>
+      <a href="show-camera.html">カメラ情報</a>
+      <a href="photo-capture.html">写真撮影</a>
+      <a href="resolution-test.html">解像度テスト</a>
+      <a href="call-readiness.html">通話前チェック</a>
+      <a href="qr-scanner.html">QRスキャナー</a>
+      <a href="green-screen.html" aria-current="page">背景合成</a>
+      <a href="troubleshooting.html">トラブル解決</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Chroma key</div>
+    <h1>グリーンスクリーン・背景合成テスト</h1>
+    <p class="lead">お手持ちのグリーンバック（またはブルーバック）を背景にカメラを起動すると、その色をリアルタイムで抜いて別の背景に合成します。AIによる人物認識ではなく、実際の単色背景を必要とする従来型のクロマキー方式です。地味な方式ですが、光さえきちんと当てれば正直このやり方が一番きれいに抜けると思っています。</p>
+
+    <div class="viewfinder" id="viewfinder">
+      <video id="video" playsinline muted style="display:none;"></video>
+      <canvas id="outCanvas" style="width:100%;height:100%;display:block;object-fit:cover;"></canvas>
+      <div class="vf-placeholder" id="placeholder">カメラはまだ開始していません<br />「カメラを開始」を押してください</div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="startBtn">カメラを開始</button>
+      <button class="btn btn-ghost" id="stopBtn" disabled>停止</button>
+      <button class="btn" id="saveBtn" disabled>この瞬間を保存</button>
+      <span class="status-msg" id="statusMsg"></span>
+    </div>
+
+    <div class="gs-controls">
+      <div class="gs-field">
+        <label>抜く色（キーカラー）</label>
+        <div class="swatch-row">
+          <button type="button" class="swatch active" data-color="#00ff00" style="background:#00ff00;" title="グリーン"></button>
+          <button type="button" class="swatch" data-color="#0000ff" style="background:#0000ff;" title="ブルー"></button>
+          <input type="color" id="customKeyColor" value="#00ff00" title="カスタム色" />
+          <button class="btn btn-ghost" id="pickFromVideoBtn" style="padding:6px 10px;font-size:0.68rem;">映像から取得</button>
+        </div>
+      </div>
+
+      <div class="gs-field">
+        <label>抜く範囲（しきい値）: <span id="thresholdVal">70</span></label>
+        <input type="range" id="thresholdSlider" min="20" max="160" value="70" />
+      </div>
+
+      <div class="gs-field">
+        <label>背景</label>
+        <div class="bg-mode-row">
+          <button type="button" class="active" data-mode="checker" id="modeChecker">透過</button>
+          <button type="button" data-mode="color" id="modeColor">単色</button>
+          <button type="button" data-mode="image" id="modeImage">画像</button>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:10px;align-items:center;">
+          <input type="color" id="bgColorPicker" value="#1c1f24" />
+          <input type="file" id="bgImageInput" accept="image/*" style="font-size:0.75rem;color:var(--text-dim);" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="article">
+    <h2>使い方</h2>
+    <ol>
+      <li><strong>グリーンバック（またはブルーバック）を背景に設置する。</strong>シワや影が出ないよう、ピンと張るのが理想です。</li>
+      <li><strong>「カメラを開始」を押す。</strong>まずは通常の映像が表示されます。</li>
+      <li><strong>キーカラーを合わせる。</strong>プリセットのグリーン／ブルーで合わなければ「映像から取得」で実際の背景色をクリックして拾います。</li>
+      <li><strong>しきい値を調整する。</strong>背景が抜けきらない場合は数値を上げ、人物まで透けてしまう場合は下げます。</li>
+      <li><strong>背景を選ぶ。</strong>透過・単色・画像から選べます。</li>
+    </ol>
+
+    <div class="callout">
+      これはAIによる自動人物切り抜きではなく、指定した色を透明にする従来型のクロマキー合成です。単色の背景布（グリーンバックやブルーバック）を使うほど、きれいに抜けます。
+    </div>
+
+    <h2>きれいに抜けないときのコツ</h2>
+    <ul>
+      <li>背景布と人物との距離を1m以上あけ、色かぶり（グリーンスピル）を減らす。</li>
+      <li>背景布に均一に光を当て、影やムラをなくす。</li>
+      <li>抜きたい色に近い服（グリーンバックなら緑系の服）を避ける。</li>
+      <li>照明が不十分な場合は<a href="index.html">Webカメラテスト</a>で明るさを事前に確認する。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="faq-item">
+      <h3>グリーンバックが無くてもAIで背景を消せますか？</h3>
+      <p>このツールは単色背景を透明にするクロマキー方式のため、無地の背景布がない状態でのAI的な人物抜き出しには対応していません。単色の壁やカーテンでも代用できる場合があります。</p>
+    </div>
+    <div class="faq-item">
+      <h3>合成した映像をビデオ通話にそのまま使えますか？</h3>
+      <p>このページはブラウザ内でのテスト・確認用です。実際の通話アプリ（Zoom、OBSなど）にこの合成映像を仮想カメラとして送るには、別途OBSなどの配信ソフトと連携する必要があります。</p>
+    </div>
+    <div class="faq-item">
+      <h3>「この瞬間を保存」で保存される画像に背景は写りますか？</h3>
+      <p>背景モードが「透過」の場合は、抜いた部分が透明なPNGとして保存されます。「単色」「画像」の場合は、選んだ背景と合成された状態で保存されます。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">ブラウザだけで完結する、無料のWebカメラ診断・撮影・スキャンツール集です。</p>
+      </div>
+      <div>
+        <h4>カメラツール</h4>
+        <ul>
+          <li><a href="index.html">Webカメラテスト</a></li>
+          <li><a href="show-camera.html">カメラ情報</a></li>
+          <li><a href="photo-capture.html">写真撮影</a></li>
+          <li><a href="resolution-test.html">解像度テスト</a></li>
+          <li><a href="call-readiness.html">通話前チェック</a></li>
+          <li><a href="qr-scanner.html">QRスキャナー</a></li>
+          <li><a href="green-screen.html">背景合成テスト</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サイト</h4>
+        <ul><li><a href="sitemap.html">サイトマップ</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/camera-utils.js"></script>
+<script>
+(() => {
+  const video = document.getElementById("video");
+  const canvas = document.getElementById("outCanvas");
+  const viewfinder = document.getElementById("viewfinder");
+  const placeholder = document.getElementById("placeholder");
+  const startBtn = document.getElementById("startBtn");
+  const stopBtn = document.getElementById("stopBtn");
+  const saveBtn = document.getElementById("saveBtn");
+  const statusMsg = document.getElementById("statusMsg");
+
+  const thresholdSlider = document.getElementById("thresholdSlider");
+  const thresholdVal = document.getElementById("thresholdVal");
+  const customKeyColor = document.getElementById("customKeyColor");
+  const pickFromVideoBtn = document.getElementById("pickFromVideoBtn");
+  const bgColorPicker = document.getElementById("bgColorPicker");
+  const bgImageInput = document.getElementById("bgImageInput");
+
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  const fgCanvas = document.createElement("canvas");
+  const fgCtx = fgCanvas.getContext("2d", { willReadFrequently: true });
+
+  let keyColor = { r: 0, g: 255, b: 0 };
+  let threshold = 70;
+  let softness = 26;
+  let bgMode = "checker";
+  let bgImage = null;
+  let checkerPattern = null;
+  let rafId = null;
+  let pickingColor = false;
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  function hexToRgb(hex) {
+    const n = parseInt(hex.replace("#", ""), 16);
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+  }
+
+  function buildCheckerPattern() {
+    const tile = document.createElement("canvas");
+    tile.width = 16; tile.height = 16;
+    const tctx = tile.getContext("2d");
+    tctx.fillStyle = "#2c3036"; tctx.fillRect(0, 0, 16, 16);
+    tctx.fillStyle = "#3a3f47";
+    tctx.fillRect(0, 0, 8, 8);
+    tctx.fillRect(8, 8, 8, 8);
+    checkerPattern = ctx.createPattern(tile, "repeat");
+  }
+
+  function resizeCanvases() {
+    const rect = viewfinder.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+  }
+
+  function drawBackground() {
+    if (bgMode === "color") {
+      ctx.fillStyle = bgColorPicker.value;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    } else if (bgMode === "image" && bgImage) {
+      // cover-fit
+      const cw = canvas.width, ch = canvas.height;
+      const ir = bgImage.width / bgImage.height, cr = cw / ch;
+      let dw, dh, dx, dy;
+      if (ir > cr) { dh = ch; dw = ch * ir; dx = (cw - dw) / 2; dy = 0; }
+      else { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }
+      ctx.drawImage(bgImage, dx, dy, dw, dh);
+    } else {
+      if (!checkerPattern) buildCheckerPattern();
+      ctx.fillStyle = checkerPattern;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  function processFrame() {
+    if (video.readyState < video.HAVE_CURRENT_DATA) {
+      rafId = requestAnimationFrame(processFrame);
+      return;
+    }
+    const w = video.videoWidth, h = video.videoHeight;
+    if (!w || !h) { rafId = requestAnimationFrame(processFrame); return; }
+
+    fgCanvas.width = w; fgCanvas.height = h;
+    fgCtx.save();
+    fgCtx.translate(w, 0);
+    fgCtx.scale(-1, 1);
+    fgCtx.drawImage(video, 0, 0, w, h);
+    fgCtx.restore();
+
+    const imgData = fgCtx.getImageData(0, 0, w, h);
+    const d = imgData.data;
+    const kr = keyColor.r, kg = keyColor.g, kb = keyColor.b;
+    const lo = threshold - softness, hi = threshold + softness;
+
+    for (let i = 0; i < d.length; i += 4) {
+      const dr = d[i] - kr, dg = d[i + 1] - kg, db = d[i + 2] - kb;
+      const dist = Math.sqrt(dr * dr + dg * dg + db * db);
+      if (dist < lo) {
+        d[i + 3] = 0;
+      } else if (dist < hi) {
+        d[i + 3] = Math.round(((dist - lo) / (hi - lo)) * 255);
+      }
+    }
+    fgCtx.putImageData(imgData, 0, 0);
+
+    resizeCanvases();
+    drawBackground();
+
+    // cover-fit the foreground into the visible canvas
+    const cw = canvas.width, ch = canvas.height;
+    const ir = w / h, cr = cw / ch;
+    let dw, dh, dx, dy;
+    if (ir > cr) { dh = ch; dw = ch * ir; dx = (cw - dw) / 2; dy = 0; }
+    else { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2; }
+    ctx.drawImage(fgCanvas, dx, dy, dw, dh);
+
+    rafId = requestAnimationFrame(processFrame);
+  }
+
+  startBtn.addEventListener("click", async () => {
+    setStatus("カメラを起動しています…");
+    startBtn.disabled = true;
+    try {
+      await CamCheck.startCamera(video);
+      placeholder.style.display = "none";
+      viewfinder.classList.add("locked");
+      stopBtn.disabled = false;
+      saveBtn.disabled = false;
+      resizeCanvases();
+      setStatus("背景色に合わせてキーカラーを調整してください", "ok");
+      rafId = requestAnimationFrame(processFrame);
+    } catch (err) {
+      startBtn.disabled = false;
+      setStatus(err.name === "NotAllowedError" ? "カメラへのアクセスが拒否されました。" : "エラー: " + err.message, "error");
+    }
+  });
+
+  stopBtn.addEventListener("click", () => {
+    cancelAnimationFrame(rafId);
+    CamCheck.stopCamera();
+    viewfinder.classList.remove("locked");
+    placeholder.style.display = "block";
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    saveBtn.disabled = true;
+    setStatus("停止しました");
+  });
+
+  saveBtn.addEventListener("click", () => {
+    const link = document.createElement("a");
+    link.download = "camcheck-green-screen.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+
+  thresholdSlider.addEventListener("input", () => {
+    threshold = Number(thresholdSlider.value);
+    thresholdVal.textContent = threshold;
+  });
+
+  document.querySelectorAll(".swatch[data-color]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".swatch[data-color]").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      keyColor = hexToRgb(btn.dataset.color);
+      customKeyColor.value = btn.dataset.color;
+    });
+  });
+
+  customKeyColor.addEventListener("input", () => {
+    document.querySelectorAll(".swatch[data-color]").forEach((b) => b.classList.remove("active"));
+    keyColor = hexToRgb(customKeyColor.value);
+  });
+
+  pickFromVideoBtn.addEventListener("click", () => {
+    pickingColor = true;
+    setStatus("映像内の抜きたい部分をクリックしてください", "ok");
+  });
+
+  canvas.addEventListener("click", (e) => {
+    if (!pickingColor) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = Math.round((e.clientX - rect.left) * (canvas.width / rect.width));
+    const y = Math.round((e.clientY - rect.top) * (canvas.height / rect.height));
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    keyColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
+    const hex = "#" + [pixel[0], pixel[1], pixel[2]].map((v) => v.toString(16).padStart(2, "0")).join("");
+    customKeyColor.value = hex;
+    document.querySelectorAll(".swatch[data-color]").forEach((b) => b.classList.remove("active"));
+    pickingColor = false;
+    setStatus("キーカラーを更新しました", "ok");
+  });
+
+  [["modeChecker", "checker"], ["modeColor", "color"], ["modeImage", "image"]].forEach(([id, mode]) => {
+    document.getElementById(id).addEventListener("click", () => {
+      bgMode = mode;
+      document.querySelectorAll(".bg-mode-row button").forEach((b) => b.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    });
+  });
+
+  bgImageInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => { bgImage = img; };
+    img.src = URL.createObjectURL(file);
+  });
+
+  window.addEventListener("resize", resizeCanvases);
+})();
+</script>
+
+<script src="js/nav.js"></script>
+
+</body>
+</html>

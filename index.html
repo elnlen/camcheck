@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CamCheck — 無料オンラインWebカメラテスト</title>
+<meta name="description" content="ブラウザだけでWebカメラをテスト。解像度・フレームレート・明るさをその場でチェックできる無料ツールです。インストール不要。" />
+<meta name="keywords" content="webカメラ テスト, カメラテスト オンライン, カメラ 動作確認, 解像度 チェック, カメラ 映らない" />
+<!-- ▼ AdSense: 自分のパブリッシャーIDに置き換えてください -->
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX" />
+<!--
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+-->
+<link rel="canonical" href="https://example.github.io/" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
+      <span id="navToggleLabel">メニュー</span>
+      <span class="nav-toggle-icon">⌄</span>
+    </button>
+  </div>
+  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+      <a href="index.html" aria-current="page">Webカメラテスト</a>
+      <a href="show-camera.html">カメラ情報</a>
+      <a href="photo-capture.html">写真撮影</a>
+      <a href="resolution-test.html">解像度テスト</a>
+      <a href="call-readiness.html">通話前チェック</a>
+      <a href="qr-scanner.html">QRスキャナー</a>
+      <a href="green-screen.html">背景合成</a>
+      <a href="troubleshooting.html">トラブル解決</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Live diagnostics</div>
+    <h1>Webカメラテスト — ブラウザで今すぐ確認</h1>
+    <p class="lead">「カメラを開始」を押すとアクセス許可のダイアログが出ます。許可すると、解像度・フレームレート・明るさをリアルタイムで測定します。会議の直前にここを1回開いておくだけで、本番中に「映ってますか？」と聞かれずに済むのでおすすめです。映像はどこにも送信されず、すべてこの端末内で処理されます。</p>
+
+    <div class="viewfinder" id="viewfinder">
+      <video id="video" playsinline muted></video>
+      <canvas class="grid-overlay" id="gridOverlay"></canvas>
+      <div class="vf-placeholder" id="placeholder">カメラはまだ開始していません<br />「カメラを開始」を押してください</div>
+
+      <span class="af-bracket tl"></span>
+      <span class="af-bracket tr"></span>
+      <span class="af-bracket bl"></span>
+      <span class="af-bracket br"></span>
+
+      <div class="hud-top">
+        <span id="hudDevice">—</span>
+        <span id="hudRes">—</span>
+      </div>
+      <div class="hud">
+        <span class="rec"><span class="blip"></span>LIVE</span>
+        <span id="hudFps">FPS —</span>
+        <span id="hudLight">LIGHT —</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="startBtn">カメラを開始</button>
+      <button class="btn" id="gridBtn" disabled>グリッド表示</button>
+      <button class="btn btn-ghost" id="stopBtn" disabled>停止</button>
+      <span class="status-msg" id="statusMsg"></span>
+    </div>
+
+    <div class="spec-sheet">
+      <div class="spec-sheet-head">
+        <span>Camera Readout</span>
+        <span id="specTimestamp">—</span>
+      </div>
+      <div class="spec-grid">
+        <div class="spec-item">
+          <div class="k">デバイス名</div>
+          <div class="v" id="sDevice">—</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">解像度</div>
+          <div class="v" id="sRes">—</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">フレームレート</div>
+          <div class="v" id="sFps">—</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">明るさ</div>
+          <div class="v" id="sLight">—</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">アスペクト比</div>
+          <div class="v" id="sAspect">—</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">向き（facing mode）</div>
+          <div class="v" id="sFacing">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="article">
+    <h2>Webカメラテストの使い方</h2>
+    <ol>
+      <li><strong>「カメラを開始」を押す。</strong>ブラウザがカメラへのアクセス許可を求めます。</li>
+      <li><strong>「許可」を選ぶ。</strong>ビューファインダーに映像が表示され、四隅のブラケットが緑色に変わります。</li>
+      <li><strong>readoutを確認する。</strong>解像度・フレームレート・明るさの数値がリアルタイムで更新されます。</li>
+      <li><strong>必要ならグリッドを表示。</strong>構図を確認したいときは「グリッド表示」で三分割線を重ねられます。</li>
+    </ol>
+
+    <div class="callout">
+      映像や音声は一切サーバーに送信されません。すべての処理はこの端末のブラウザ内で完結し、ページを閉じると同時に破棄されます。
+    </div>
+
+    <h2>各指標の見方</h2>
+    <h3>解像度</h3>
+    <p>カメラが実際に配信している映像のピクセル数です。720p（1280×720）以上あればビデオ通話に十分、1080p（1920×1080）あれば配信や録画にも余裕があります。数値が極端に低い場合は、他のアプリがカメラを占有しているか、USBの帯域不足が疑われます。</p>
+
+    <h3>フレームレート（FPS）</h3>
+    <p>1秒間に何コマ映像を送れているかを示します。24fps以上あれば動きが滑らかに見え、15fps未満になるとカクつきが目立ちます。低照度環境ではカメラが露出を稼ぐためにフレームレートを自動的に落とすことがあります。</p>
+
+    <h3>明るさ</h3>
+    <p>映像の平均輝度を0〜255のスケールで推定した値です。40未満は暗すぎて相手が見えにくく、230を超えると白飛びしています。デスクライトや窓の位置を調整して80〜200の範囲に収めるのが目安です。個人的には、背後に窓がある「逆光」状態が一番厄介だと思っていて、明るさの数値自体は悪くなくても顔だけ暗く沈むことがあります。数値が良好なのに映りがイマイチな場合は、まず光源の位置を疑ってみてください。</p>
+
+    <h2>よくある質問</h2>
+
+    <div class="faq-item">
+      <h3>カメラの映像はどこかに保存・送信されますか？</h3>
+      <p>いいえ。このツールはブラウザのgetUserMedia APIを使い、すべての処理を端末内で行います。映像や写真をサーバーにアップロードすることはありません。</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>「カメラを開始」を押しても映像が表示されません</h3>
+      <p>多くの場合、ブラウザの許可ダイアログで「ブロック」を選んでしまっているか、他のアプリ（Zoom、Teams、OBSなど）がカメラを占有しています。詳しい対処法は<a href="troubleshooting.html">トラブルシューティングガイド</a>をご覧ください。</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>インストールや会員登録は必要ですか？</h3>
+      <p>不要です。このページを開くだけで、モダンブラウザなら追加のソフトなしですぐに使えます。</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>スマートフォンでも使えますか？</h3>
+      <p>iOS Safari・Android Chromeなど主要なモバイルブラウザに対応しています。フロントカメラ・リアカメラの切り替えに対応していない端末もあるため、対応状況は下の互換性表を参照してください。</p>
+    </div>
+
+    <h2>対応環境</h2>
+    <table class="compat">
+      <thead>
+        <tr><th>プラットフォーム</th><th>対応ブラウザ</th><th>最小バージョン目安</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Windows</td><td>Chrome / Edge / Firefox</td><td>Chrome 53・Edge 79・Firefox 36</td></tr>
+        <tr><td>macOS</td><td>Chrome / Safari / Firefox</td><td>Safari 11・Chrome 53・Firefox 36</td></tr>
+        <tr><td>Android</td><td>Chrome / Firefox / Samsung Internet</td><td>Chrome 53・Firefox 36</td></tr>
+        <tr><td>iOS / iPadOS</td><td>Safari</td><td>Safari 11 以降（他ブラウザもSafariエンジン経由で対応）</td></tr>
+      </tbody>
+    </table>
+
+    <p>関連ツール：カメラのデバイス情報を詳しく見るなら<a href="show-camera.html">カメラ情報</a>、静止画を保存したいなら<a href="photo-capture.html">写真撮影ツール</a>、解像度ごとの実配信性能を比較したいなら<a href="resolution-test.html">解像度テスト</a>をどうぞ。</p>
+  </section>
+
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">ブラウザだけで完結する、無料のWebカメラ・写真撮影・解像度診断ツール集です。</p>
+      </div>
+      <div>
+        <h4>カメラツール</h4>
+        <ul>
+          <li><a href="index.html">Webカメラテスト</a></li>
+          <li><a href="show-camera.html">カメラ情報</a></li>
+          <li><a href="photo-capture.html">写真撮影</a></li>
+          <li><a href="resolution-test.html">解像度テスト</a></li>
+          <li><a href="call-readiness.html">通話前チェック</a></li>
+          <li><a href="qr-scanner.html">QRスキャナー</a></li>
+          <li><a href="green-screen.html">背景合成テスト</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サイト</h4>
+        <ul>
+          <li><a href="sitemap.html">サイトマップ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom wrap" style="padding-left:0;padding-right:0;">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/camera-utils.js"></script>
+<script>
+(() => {
+  const video = document.getElementById("video");
+  const viewfinder = document.getElementById("viewfinder");
+  const placeholder = document.getElementById("placeholder");
+  const gridOverlay = document.getElementById("gridOverlay");
+  const startBtn = document.getElementById("startBtn");
+  const stopBtn = document.getElementById("stopBtn");
+  const gridBtn = document.getElementById("gridBtn");
+  const statusMsg = document.getElementById("statusMsg");
+
+  const hudDevice = document.getElementById("hudDevice");
+  const hudRes = document.getElementById("hudRes");
+  const hudFps = document.getElementById("hudFps");
+  const hudLight = document.getElementById("hudLight");
+
+  const sDevice = document.getElementById("sDevice");
+  const sRes = document.getElementById("sRes");
+  const sFps = document.getElementById("sFps");
+  const sLight = document.getElementById("sLight");
+  const sAspect = document.getElementById("sAspect");
+  const sFacing = document.getElementById("sFacing");
+  const specTimestamp = document.getElementById("specTimestamp");
+
+  let statsTimer = null;
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  async function updateStats(stream) {
+    const settings = CamCheck.readTrackSettings(stream);
+    if (!settings) return;
+
+    const fps = await CamCheck.measureFrameRate(video, 1000);
+    const light = CamCheck.estimateLightLevel(video);
+
+    const resInfo = CamCheck.resLabel(settings.width, settings.height);
+    const fpsInfo = CamCheck.fpsLabel(fps);
+    const lightInfo = CamCheck.lightLabel(light);
+
+    hudDevice.textContent = settings.label.slice(0, 28);
+    hudRes.textContent = settings.width ? `${settings.width}×${settings.height}` : "—";
+    hudFps.textContent = fps ? `${fps} FPS` : "FPS —";
+    hudLight.textContent = light !== null ? `LIGHT ${light}` : "LIGHT —";
+
+    sDevice.textContent = settings.label;
+    sRes.textContent = resInfo.text; sRes.className = "v " + resInfo.cls;
+    sFps.textContent = fpsInfo.text; sFps.className = "v " + fpsInfo.cls;
+    sLight.textContent = lightInfo.text; sLight.className = "v " + lightInfo.cls;
+    sAspect.textContent = settings.aspectRatio ? settings.aspectRatio.toFixed(2) : (settings.width && settings.height ? (settings.width/settings.height).toFixed(2) : "—");
+    sFacing.textContent = settings.facingMode || "デスクトップ / 不明";
+    specTimestamp.textContent = new Date().toLocaleTimeString("ja-JP");
+  }
+
+  startBtn.addEventListener("click", async () => {
+    setStatus("カメラを起動しています…");
+    startBtn.disabled = true;
+    try {
+      const stream = await CamCheck.startCamera(video);
+      placeholder.style.display = "none";
+      viewfinder.classList.add("locked");
+      stopBtn.disabled = false;
+      gridBtn.disabled = false;
+      setStatus("カメラは正常に動作しています", "ok");
+
+      await updateStats(stream);
+      statsTimer = setInterval(() => updateStats(stream), 2500);
+    } catch (err) {
+      startBtn.disabled = false;
+      if (err.name === "NotAllowedError") {
+        setStatus("カメラへのアクセスが拒否されました。ブラウザの許可設定を確認してください。", "error");
+      } else if (err.name === "NotFoundError") {
+        setStatus("カメラが見つかりません。接続を確認してください。", "error");
+      } else {
+        setStatus("エラー: " + err.message, "error");
+      }
+    }
+  });
+
+  stopBtn.addEventListener("click", () => {
+    CamCheck.stopCamera();
+    clearInterval(statsTimer);
+    viewfinder.classList.remove("locked");
+    placeholder.style.display = "block";
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    gridBtn.disabled = true;
+    setStatus("カメラを停止しました");
+  });
+
+  gridBtn.addEventListener("click", () => {
+    viewfinder.classList.toggle("show-grid");
+    if (viewfinder.classList.contains("show-grid")) {
+      CamCheck.drawThirdsGrid(gridOverlay);
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (viewfinder.classList.contains("show-grid")) {
+      CamCheck.drawThirdsGrid(gridOverlay);
+    }
+  });
+})();
+</script>
+
+<script src="js/nav.js"></script>
+
+</body>
+</html>

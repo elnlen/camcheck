@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About — CamCheckについて</title>
+<meta name="description" content="CamCheckは、ブラウザだけで動作する無料のWebカメラ診断ツール集です。開発方針とプライバシーへの考え方を説明します。" />
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX" />
+<link rel="canonical" href="https://example.github.io/about.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
+      <span id="navToggleLabel">メニュー</span>
+      <span class="nav-toggle-icon">⌄</span>
+    </button>
+  </div>
+  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+      <a href="index.html">Webカメラテスト</a>
+      <a href="show-camera.html">カメラ情報</a>
+      <a href="photo-capture.html">写真撮影</a>
+      <a href="resolution-test.html">解像度テスト</a>
+      <a href="call-readiness.html">通話前チェック</a>
+      <a href="qr-scanner.html">QRスキャナー</a>
+      <a href="green-screen.html">背景合成</a>
+      <a href="troubleshooting.html">トラブル解決</a>
+      <a href="about.html" aria-current="page">About</a>
+      <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero" style="padding-bottom:0;">
+    <div class="hero-kicker">● About</div>
+    <h1>CamCheckについて</h1>
+    <p class="lead">CamCheckは、ビデオ通話や配信の前にWebカメラの状態をすばやく確認できるよう作った、無料のブラウザ内蔵ツール集です。</p>
+  </section>
+
+  <section class="article" style="margin-top:24px;">
+    <h2>作った理由</h2>
+    <p>会議に入る直前になって「あれ、カメラ映ってる？」と焦った経験が何度もあって、そのたびに専用アプリをインストールしたり、いろんなサイトをたらい回しにされたりするのが面倒だったので作りました。ブラウザを開いて数秒で「大丈夫そうか、そうでないか」がわかれば十分だと思っています。</p>
+
+    <h2>プライバシーについて</h2>
+    <p>すべてのツールはブラウザの<code>getUserMedia</code>や<code>Canvas</code>といった標準APIのみを使っていて、映像・写真・音声を外部サーバーに送る処理は一切書いていません。これは「そういう方針です」という建前ではなく、単純にコードを見ればそうなっている、という話です。気になる方はソースを見てもらえれば早いと思います。</p>
+
+    <h2>広告について</h2>
+    <p>正直に言うと、ホスティング自体はほぼ無料なので広告は必須ではありません。ただ、継続して機能を増やしていく分のモチベーションとして、一部のページに広告を出す予定です（このバージョンではまだ入れていません）。広告配信には第三者の広告ネットワークを使うことになるため、Cookie等を通じた配信最適化が行われる場合がある、ということは先にお伝えしておきます。</p>
+
+    <h2>これから追加したいもの</h2>
+    <p>優先度が高いと思っているのは、複数カメラの同時比較と、マイク側のもう少し詳しい診断（ノイズ・エコーの検出）です。要望があれば<a href="contact.html">お問い合わせ</a>から教えてください。使う人が少ない機能を頑張って作るより、実際に欲しがられているものから作りたいので。</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">ブラウザだけで完結する、無料のWebカメラ・写真撮影・解像度診断ツール集です。</p>
+      </div>
+      <div>
+        <h4>カメラツール</h4>
+        <ul>
+          <li><a href="index.html">Webカメラテスト</a></li>
+          <li><a href="show-camera.html">カメラ情報</a></li>
+          <li><a href="photo-capture.html">写真撮影</a></li>
+          <li><a href="resolution-test.html">解像度テスト</a></li>
+          <li><a href="call-readiness.html">通話前チェック</a></li>
+          <li><a href="qr-scanner.html">QRスキャナー</a></li>
+          <li><a href="green-screen.html">背景合成テスト</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サイト</h4>
+        <ul><li><a href="sitemap.html">サイトマップ</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/nav.js"></script>
+
+</body>
+</html>

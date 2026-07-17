@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QRコードスキャナー — カメラでその場で読み取り | CamCheck</title>
+<meta name="description" content="ブラウザのカメラでQRコードをその場で読み取れる無料ツール。アプリのインストール不要、読み取ったURLやテキストはこの端末内だけで処理されます。" />
+<meta name="keywords" content="QRコード 読み取り, QRコード スキャン オンライン, カメラ QRコード ブラウザ" />
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX" />
+<link rel="canonical" href="https://example.github.io/qr-scanner.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
+      <span id="navToggleLabel">メニュー</span>
+      <span class="nav-toggle-icon">⌄</span>
+    </button>
+  </div>
+  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+      <a href="index.html">Webカメラテスト</a>
+      <a href="show-camera.html">カメラ情報</a>
+      <a href="photo-capture.html">写真撮影</a>
+      <a href="resolution-test.html">解像度テスト</a>
+      <a href="call-readiness.html">通話前チェック</a>
+      <a href="qr-scanner.html" aria-current="page">QRスキャナー</a>
+      <a href="green-screen.html">背景合成</a>
+      <a href="troubleshooting.html">トラブル解決</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Scan</div>
+    <h1>QRコードスキャナー — カメラにかざすだけ</h1>
+    <p class="lead">アプリのインストールは不要です。カメラを起動してQRコードにかざすと、自動的に検出してURLやテキストを表示します。読み取り処理はすべてこの端末内で行われ、画像や内容はサーバーに送信されません。iPhoneのカメラアプリでも読めますが、PCのブラウザから直接読みたい場面は意外と多いはずです。</p>
+
+    <div class="viewfinder" id="viewfinder">
+      <video id="video" playsinline muted></video>
+      <canvas id="overlay" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></canvas>
+      <div class="vf-placeholder" id="placeholder">カメラはまだ開始していません<br />「スキャンを開始」を押してください</div>
+      <span class="af-bracket tl"></span>
+      <span class="af-bracket tr"></span>
+      <span class="af-bracket bl"></span>
+      <span class="af-bracket br"></span>
+      <div class="hud-top">
+        <span id="hudState">待機中</span>
+        <span id="hudFps"></span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="startBtn">スキャンを開始</button>
+      <button class="btn btn-ghost" id="stopBtn" disabled>停止</button>
+      <span class="status-msg" id="statusMsg"></span>
+    </div>
+
+    <div class="spec-sheet" id="resultCard" style="display:none;margin-top:24px;">
+      <div class="spec-sheet-head"><span>Decoded Result</span><span id="resultTime">—</span></div>
+      <div style="padding:18px;">
+        <div class="k" style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-faint);margin-bottom:8px;">内容</div>
+        <div id="resultText" class="mono" style="font-size:1.05rem;word-break:break-all;color:var(--focus);margin-bottom:16px;"></div>
+        <div class="controls" style="margin-top:0;">
+          <a class="btn btn-primary" id="openLinkBtn" href="#" target="_blank" rel="noopener" style="display:none;">リンクを開く</a>
+          <button class="btn" id="copyBtn">コピー</button>
+          <button class="btn btn-ghost" id="scanAgainBtn">もう一度スキャン</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="article">
+    <h2>使い方</h2>
+    <ol>
+      <li><strong>「スキャンを開始」を押す。</strong>カメラへのアクセスを許可してください。</li>
+      <li><strong>QRコードを枠内に収める。</strong>四隅のブラケットが目安になります。ピントが合う距離まで近づけてください。</li>
+      <li><strong>自動で検出されます。</strong>読み取れた瞬間に内容が表示され、URLであれば「リンクを開く」ボタンが使えます。</li>
+    </ol>
+
+    <div class="callout">
+      読み取ったQRコードの中身は、この端末のブラウザメモリ上にのみ表示されます。外部サーバーへの送信や記録は一切行っていません。
+    </div>
+
+    <h2>うまく読み取れないときは</h2>
+    <ul>
+      <li>QRコードとカメラの距離を調整する（近すぎても遠すぎても認識しづらくなります）。</li>
+      <li>QRコードに強い反射や影がかかっていないか確認する。</li>
+      <li>画面全体が暗い場合は照明を明るくする。カメラの明るさは<a href="index.html">Webカメラテスト</a>で確認できます。</li>
+      <li>手ブレを抑えるため、カメラまたはQRコード側を安定させる。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="faq-item">
+      <h3>読み取ったURLを開くと危険はありませんか？</h3>
+      <p>QRコード自体はただの文字列（URLやテキスト）を符号化したものです。表示されたリンク先が信頼できるかどうかは、通常のWebリンクと同様にURLをよく確認してから開いてください。</p>
+    </div>
+    <div class="faq-item">
+      <h3>連続で複数のQRコードを読み取れますか？</h3>
+      <p>1つ読み取るとスキャンが一時停止します。「もう一度スキャン」を押せば、続けて別のコードを読み取れます。</p>
+    </div>
+    <div class="faq-item">
+      <h3>対応しているQRコードの種類は？</h3>
+      <p>URL、テキスト、Wi-Fi設定文字列など、標準的なQRコードの内容であれば読み取り、文字列としてそのまま表示します。連絡先（vCard）やWi-Fi用QRコードも文字列としては読み取れますが、自動的な設定反映は行いません。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">ブラウザだけで完結する、無料のWebカメラ診断・撮影・スキャンツール集です。</p>
+      </div>
+      <div>
+        <h4>カメラツール</h4>
+        <ul>
+          <li><a href="index.html">Webカメラテスト</a></li>
+          <li><a href="show-camera.html">カメラ情報</a></li>
+          <li><a href="photo-capture.html">写真撮影</a></li>
+          <li><a href="resolution-test.html">解像度テスト</a></li>
+          <li><a href="call-readiness.html">通話前チェック</a></li>
+          <li><a href="qr-scanner.html">QRスキャナー</a></li>
+          <li><a href="green-screen.html">背景合成テスト</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サイト</h4>
+        <ul><li><a href="sitemap.html">サイトマップ</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/vendor/jsQR.js"></script>
+<script src="js/camera-utils.js"></script>
+<script>
+(() => {
+  const video = document.getElementById("video");
+  const overlay = document.getElementById("overlay");
+  const viewfinder = document.getElementById("viewfinder");
+  const placeholder = document.getElementById("placeholder");
+  const startBtn = document.getElementById("startBtn");
+  const stopBtn = document.getElementById("stopBtn");
+  const statusMsg = document.getElementById("statusMsg");
+  const hudState = document.getElementById("hudState");
+
+  const resultCard = document.getElementById("resultCard");
+  const resultText = document.getElementById("resultText");
+  const resultTime = document.getElementById("resultTime");
+  const openLinkBtn = document.getElementById("openLinkBtn");
+  const copyBtn = document.getElementById("copyBtn");
+  const scanAgainBtn = document.getElementById("scanAgainBtn");
+
+  const octx = overlay.getContext("2d");
+  let scanCanvas = document.createElement("canvas");
+  let sctx = scanCanvas.getContext("2d", { willReadFrequently: true });
+  let rafId = null;
+  let paused = false;
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  function resizeOverlay() {
+    const rect = viewfinder.getBoundingClientRect();
+    overlay.width = rect.width;
+    overlay.height = rect.height;
+  }
+
+  function drawBox(loc) {
+    resizeOverlay();
+    octx.clearRect(0, 0, overlay.width, overlay.height);
+    if (!loc) return;
+    const scaleX = overlay.width / video.videoWidth;
+    const scaleY = overlay.height / video.videoHeight;
+    // Mirror horizontally to match the mirrored video display.
+    const pts = [loc.topLeftCorner, loc.topRightCorner, loc.bottomRightCorner, loc.bottomLeftCorner]
+      .map((p) => ({ x: overlay.width - p.x * scaleX, y: p.y * scaleY }));
+    octx.strokeStyle = "#5fd9a0";
+    octx.lineWidth = 3;
+    octx.beginPath();
+    octx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i += 1) octx.lineTo(pts[i].x, pts[i].y);
+    octx.closePath();
+    octx.stroke();
+  }
+
+  function tick() {
+    if (paused || video.readyState !== video.HAVE_ENOUGH_DATA) {
+      rafId = requestAnimationFrame(tick);
+      return;
+    }
+    scanCanvas.width = video.videoWidth;
+    scanCanvas.height = video.videoHeight;
+    sctx.drawImage(video, 0, 0, scanCanvas.width, scanCanvas.height);
+    const imageData = sctx.getImageData(0, 0, scanCanvas.width, scanCanvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
+
+    if (code && code.data) {
+      drawBox(code.location);
+      onDecoded(code.data);
+      return;
+    }
+    drawBox(null);
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function onDecoded(text) {
+    paused = true;
+    hudState.textContent = "検出しました";
+    resultText.textContent = text;
+    resultTime.textContent = new Date().toLocaleTimeString("ja-JP");
+    resultCard.style.display = "block";
+
+    if (/^https?:\/\//i.test(text)) {
+      openLinkBtn.href = text;
+      openLinkBtn.style.display = "inline-block";
+    } else {
+      openLinkBtn.style.display = "none";
+    }
+    setStatus("読み取り完了", "ok");
+  }
+
+  startBtn.addEventListener("click", async () => {
+    setStatus("カメラを起動しています…");
+    startBtn.disabled = true;
+    resultCard.style.display = "none";
+    try {
+      await CamCheck.startCamera(video, {
+        video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false,
+      });
+      placeholder.style.display = "none";
+      viewfinder.classList.add("locked");
+      stopBtn.disabled = false;
+      hudState.textContent = "スキャン中…";
+      setStatus("QRコードを枠内に収めてください", "ok");
+      paused = false;
+      resizeOverlay();
+      rafId = requestAnimationFrame(tick);
+    } catch (err) {
+      startBtn.disabled = false;
+      setStatus(err.name === "NotAllowedError" ? "カメラへのアクセスが拒否されました。" : "エラー: " + err.message, "error");
+    }
+  });
+
+  stopBtn.addEventListener("click", () => {
+    cancelAnimationFrame(rafId);
+    CamCheck.stopCamera();
+    viewfinder.classList.remove("locked");
+    placeholder.style.display = "block";
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    octx.clearRect(0, 0, overlay.width, overlay.height);
+    setStatus("停止しました");
+  });
+
+  copyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(resultText.textContent);
+      setStatus("コピーしました", "ok");
+    } catch {
+      setStatus("コピーできませんでした。手動で選択してください。", "error");
+    }
+  });
+
+  scanAgainBtn.addEventListener("click", () => {
+    resultCard.style.display = "none";
+    hudState.textContent = "スキャン中…";
+    setStatus("QRコードを枠内に収めてください", "ok");
+    paused = false;
+    rafId = requestAnimationFrame(tick);
+  });
+})();
+</script>
+
+<script src="js/nav.js"></script>
+
+</body>
+</html>

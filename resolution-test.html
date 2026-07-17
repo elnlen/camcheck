@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>カメラ解像度テスト — 実際に配信できる画質を確認 | CamCheck</title>
+<meta name="description" content="720p・1080p・4Kなど複数の解像度をブラウザから順番にリクエストし、Webカメラが実際に対応している画質を確認できる無料ツール。" />
+<meta name="keywords" content="webカメラ 解像度 テスト, カメラ 1080p 確認, カメラ 画質 診断" />
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX" />
+<link rel="canonical" href="https://example.github.io/resolution-test.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
+      <span id="navToggleLabel">メニュー</span>
+      <span class="nav-toggle-icon">⌄</span>
+    </button>
+  </div>
+  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+      <a href="index.html">Webカメラテスト</a>
+      <a href="show-camera.html">カメラ情報</a>
+      <a href="photo-capture.html">写真撮影</a>
+      <a href="resolution-test.html" aria-current="page">解像度テスト</a>
+      <a href="call-readiness.html">通話前チェック</a>
+      <a href="qr-scanner.html">QRスキャナー</a>
+      <a href="green-screen.html">背景合成</a>
+      <a href="troubleshooting.html">トラブル解決</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Resolution sweep</div>
+    <h1>解像度テスト — カメラが本当に対応する画質を確認</h1>
+    <p class="lead">カタログスペックではなく、ブラウザから実際にリクエストして確認します。480p〜4Kまで順番に要求し、カメラが応答した実際の解像度を記録します。「4K対応」と書かれた製品でも動画配信は1080p止まり、というケースを何度も見てきたので、買う前・使う前にここで確かめておくと安心です。</p>
+
+    <div class="viewfinder" id="viewfinder" style="aspect-ratio:16/9;">
+      <video id="video" playsinline muted></video>
+      <div class="vf-placeholder" id="placeholder">「テストを開始」を押すと、各解像度を順番に試します</div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="startBtn">テストを開始</button>
+      <span class="status-msg" id="statusMsg"></span>
+    </div>
+
+    <div class="spec-sheet" style="margin-top:24px;">
+      <div class="spec-sheet-head"><span>Resolution Sweep Results</span><span id="progress">0 / 5</span></div>
+      <div class="spec-grid" id="resultsGrid">
+        <div class="spec-item"><div class="k">480p (SD)</div><div class="v" id="r480">未テスト</div></div>
+        <div class="spec-item"><div class="k">720p (HD)</div><div class="v" id="r720">未テスト</div></div>
+        <div class="spec-item"><div class="k">1080p (Full HD)</div><div class="v" id="r1080">未テスト</div></div>
+        <div class="spec-item"><div class="k">1440p (QHD)</div><div class="v" id="r1440">未テスト</div></div>
+        <div class="spec-item"><div class="k">2160p (4K)</div><div class="v" id="r2160">未テスト</div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="article">
+    <h2>このテストの仕組み</h2>
+    <p>Web標準の<code>getUserMedia</code>には、希望する解像度を「理想値（ideal）」として指定できる仕組みがあります。このツールはSDから4Kまで5段階の解像度を順番にリクエストし、カメラとドライバが実際に返してきた解像度をそのまま記録します。カタログ上の最大解像度と、実際にブラウザ経由で得られる解像度が異なることは珍しくありません。</p>
+
+    <div class="callout">
+      多くの内蔵ノートPCカメラは720pが上限です。1080p以上を安定して使いたい場合は、外付けのUSB Webカメラの導入を検討してください。
+    </div>
+
+    <h2>結果の読み方</h2>
+    <ul>
+      <li><strong>緑（対応）</strong> — リクエストした解像度どおり、またはそれに近い値で応答しました。</li>
+      <li><strong>黄（近似）</strong> — リクエストした解像度は得られず、カメラが対応する最も近い値にフォールバックしました。</li>
+      <li><strong>赤（非対応）</strong> — その解像度でのアクセスに失敗しました。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="faq-item">
+      <h3>4Kと表示されているのに実際は1080pしか出ません</h3>
+      <p>製品パッケージの「4K対応」表記は、静止画センサーの解像度を指している場合があります。動画ストリーミングの上限は別スペックであることが多く、ドライバやUSB帯域の制約でさらに低くなることもあります。</p>
+    </div>
+    <div class="faq-item">
+      <h3>テスト中に画面が一瞬止まりますか？</h3>
+      <p>各解像度を切り替える際にカメラを一度再初期化するため、コンマ数秒〜1秒ほど映像が止まることがあります。故障ではありません。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">ブラウザだけで完結する、無料のWebカメラ・写真撮影・解像度診断ツール集です。</p>
+      </div>
+      <div>
+        <h4>カメラツール</h4>
+        <ul>
+          <li><a href="index.html">Webカメラテスト</a></li>
+          <li><a href="show-camera.html">カメラ情報</a></li>
+          <li><a href="photo-capture.html">写真撮影</a></li>
+          <li><a href="resolution-test.html">解像度テスト</a></li>
+          <li><a href="call-readiness.html">通話前チェック</a></li>
+          <li><a href="qr-scanner.html">QRスキャナー</a></li>
+          <li><a href="green-screen.html">背景合成テスト</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サイト</h4>
+        <ul><li><a href="sitemap.html">サイトマップ</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/camera-utils.js"></script>
+<script>
+(() => {
+  const video = document.getElementById("video");
+  const viewfinder = document.getElementById("viewfinder");
+  const placeholder = document.getElementById("placeholder");
+  const startBtn = document.getElementById("startBtn");
+  const statusMsg = document.getElementById("statusMsg");
+  const progress = document.getElementById("progress");
+
+  const targets = [
+    { id: "r480", w: 640, h: 480, label: "480p" },
+    { id: "r720", w: 1280, h: 720, label: "720p" },
+    { id: "r1080", w: 1920, h: 1080, label: "1080p" },
+    { id: "r1440", w: 2560, h: 1440, label: "1440p" },
+    { id: "r2160", w: 3840, h: 2160, label: "2160p" },
+  ];
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+  startBtn.addEventListener("click", async () => {
+    startBtn.disabled = true;
+    placeholder.style.display = "none";
+    setStatus("テスト中…");
+
+    for (let i = 0; i < targets.length; i += 1) {
+      const t = targets[i];
+      progress.textContent = `${i + 1} / ${targets.length}`;
+      const el = document.getElementById(t.id);
+      el.textContent = "テスト中…";
+      el.className = "v";
+
+      try {
+        const stream = await CamCheck.startCamera(video, {
+          video: { width: { ideal: t.w }, height: { ideal: t.h } },
+          audio: false,
+        });
+        viewfinder.classList.add("locked");
+        await sleep(400);
+        const settings = CamCheck.readTrackSettings(stream);
+        const gotW = settings.width, gotH = settings.height;
+
+        if (gotW >= t.w * 0.95 && gotH >= t.h * 0.95) {
+          el.textContent = `対応 (${gotW}×${gotH})`;
+          el.className = "v pass";
+        } else {
+          el.textContent = `近似 (${gotW}×${gotH})`;
+          el.className = "v warn-v";
+        }
+      } catch (err) {
+        el.textContent = "非対応";
+        el.className = "v fail";
+      }
+      await sleep(300);
+    }
+
+    CamCheck.stopCamera();
+    setStatus("テスト完了", "ok");
+    startBtn.disabled = false;
+    startBtn.textContent = "もう一度テスト";
+  });
+})();
+</script>
+
+<script src="js/nav.js"></script>
+
+</body>
+</html>

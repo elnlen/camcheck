@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ビデオ通話 事前チェック — カメラ・マイク・回線を一括診断 | CamCheck</title>
+<meta name="description" content="Zoom・Teams・Google Meetなどのビデオ通話前に、カメラ・マイク・スピーカー・回線速度をまとめてチェックできる無料ツール。" />
+<meta name="keywords" content="ビデオ通話 事前チェック, zoom カメラ テスト, teams マイク テスト, 通話 前 確認" />
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX" />
+<link rel="canonical" href="https://example.github.io/call-readiness.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--panel);
+    margin-bottom: 10px;
+  }
+  .check-icon {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 0.85rem; flex: none;
+    border: 1px solid var(--line); color: var(--text-faint);
+  }
+  .check-row.pass .check-icon { border-color: var(--focus); color: var(--focus); }
+  .check-row.fail .check-icon { border-color: var(--rec); color: var(--rec); }
+  .check-row.running .check-icon { border-color: var(--warn); color: var(--warn); }
+  .check-body { flex: 1; min-width: 0; }
+  .check-title { font-weight: 600; font-size: 0.95rem; }
+  .check-detail { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-faint); margin-top: 2px; }
+  .meter {
+    height: 8px; border-radius: 4px; background: var(--panel-raised);
+    overflow: hidden; margin-top: 8px; border: 1px solid var(--line);
+  }
+  .meter-fill { height: 100%; width: 0%; background: var(--focus); transition: width 0.08s linear; }
+  .score-badge {
+    font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.05em; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--text-faint);
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
+      <span id="navToggleLabel">メニュー</span>
+      <span class="nav-toggle-icon">⌄</span>
+    </button>
+  </div>
+  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+      <a href="index.html">Webカメラテスト</a>
+      <a href="show-camera.html">カメラ情報</a>
+      <a href="photo-capture.html">写真撮影</a>
+      <a href="resolution-test.html">解像度テスト</a>
+      <a href="call-readiness.html" aria-current="page">通話前チェック</a>
+      <a href="qr-scanner.html">QRスキャナー</a>
+      <a href="green-screen.html">背景合成</a>
+      <a href="troubleshooting.html">トラブル解決</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Pre-call diagnostics</div>
+    <h1>ビデオ通話 事前チェック</h1>
+    <p class="lead">Zoom・Teams・Google Meetなどに参加する前に、カメラ・マイク・スピーカー・回線速度をまとめて確認します。「すべてチェック」を押すだけで、順番に自動テストします。個人的には、大事な面接や商談の前だけでもここを通しておくと、心理的にだいぶ落ち着けます。</p>
+
+    <div class="viewfinder" id="viewfinder" style="aspect-ratio:16/9;">
+      <video id="video" playsinline muted></video>
+      <div class="vf-placeholder" id="placeholder">「すべてチェック」を押すとテストが始まります</div>
+      <span class="af-bracket tl"></span>
+      <span class="af-bracket tr"></span>
+      <span class="af-bracket bl"></span>
+      <span class="af-bracket br"></span>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="runBtn">すべてチェック</button>
+      <span class="status-msg" id="statusMsg"></span>
+      <span class="score-badge" id="scoreBadge" style="margin-left:auto;">未実行</span>
+    </div>
+
+    <div style="margin-top:22px;">
+      <div class="check-row" id="rowCamera">
+        <div class="check-icon" id="iconCamera">1</div>
+        <div class="check-body">
+          <div class="check-title">カメラ</div>
+          <div class="check-detail" id="detailCamera">未実行</div>
+        </div>
+      </div>
+
+      <div class="check-row" id="rowMic">
+        <div class="check-icon" id="iconMic">2</div>
+        <div class="check-body">
+          <div class="check-title">マイク</div>
+          <div class="check-detail" id="detailMic">未実行</div>
+          <div class="meter"><div class="meter-fill" id="micMeter"></div></div>
+        </div>
+      </div>
+
+      <div class="check-row" id="rowSpeaker">
+        <div class="check-icon" id="iconSpeaker">3</div>
+        <div class="check-body">
+          <div class="check-title">スピーカー</div>
+          <div class="check-detail" id="detailSpeaker">未実行 — テスト音が鳴ったら「聞こえた」を押してください</div>
+          <div class="controls" style="margin-top:8px;">
+            <button class="btn" id="playToneBtn" disabled>テスト音を再生</button>
+            <button class="btn btn-ghost" id="heardBtn" disabled>聞こえた</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="check-row" id="rowNetwork">
+        <div class="check-icon" id="iconNetwork">4</div>
+        <div class="check-body">
+          <div class="check-title">回線速度（簡易測定）</div>
+          <div class="check-detail" id="detailNetwork">未実行</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="article">
+    <h2>何をテストしていますか</h2>
+    <ul>
+      <li><strong>カメラ</strong> — 映像が取得できるか、極端に暗くないかを確認します。</li>
+      <li><strong>マイク</strong> — 音声入力があるか、無音でないかをレベルメーターで確認します。数秒間、実際に声を出してみてください。</li>
+      <li><strong>スピーカー</strong> — テスト音が実際のスピーカー／イヤホンから聞こえるかを、ユーザー自身の耳で確認します（自動判定はできません）。</li>
+      <li><strong>回線速度</strong> — このサイト内の2MBのファイルをダウンロードする時間から、おおよそのダウンロード速度を計算します。参考値であり、公式の回線速度測定とは異なります。</li>
+    </ul>
+
+    <div class="callout">
+      映像・音声はこの端末内でのみ処理され、外部に送信されません。回線速度の測定にはこのサイト自身が配信する2MBのテストファイルのみを使用しており、外部サービスへの通信は発生しません。
+    </div>
+
+    <h2>目安となる基準</h2>
+    <table class="compat">
+      <thead><tr><th>項目</th><th>快適</th><th>やや不安</th></tr></thead>
+      <tbody>
+        <tr><td>カメラ明るさ</td><td>80〜200</td><td>40未満 または 230超</td></tr>
+        <tr><td>マイク入力</td><td>発話時に明確に反応</td><td>反応が弱い・無音</td></tr>
+        <tr><td>回線速度（下り）</td><td>3 Mbps以上</td><td>1.5 Mbps未満</td></tr>
+      </tbody>
+    </table>
+
+    <h2>チェックで問題が見つかったら</h2>
+    <p>カメラやマイクに問題があった場合は<a href="troubleshooting.html">トラブルシューティングガイド</a>を、画質を詳しく見たい場合は<a href="resolution-test.html">解像度テスト</a>をあわせてご利用ください。</p>
+
+    <h2>よくある質問</h2>
+    <div class="faq-item">
+      <h3>回線速度の数値はZoomやSpeedtestの結果と違います。なぜですか？</h3>
+      <p>このテストは同一サイト内の小さなファイル（2MB）を1回ダウンロードする簡易測定で、大規模な速度測定サービスとは測定方法が異なります。あくまで「明らかに遅すぎないか」を確認する目安としてお使いください。</p>
+    </div>
+    <div class="faq-item">
+      <h3>スピーカーのテストだけ自動判定にならないのはなぜ？</h3>
+      <p>ブラウザは「音が実際にユーザーの耳に届いたか」を検知できません。そのため、テスト音を再生した後、聞こえたかどうかをご自身で確認して「聞こえた」を押していただく方式にしています。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">ブラウザだけで完結する、無料のWebカメラ診断・撮影・スキャンツール集です。</p>
+      </div>
+      <div>
+        <h4>カメラツール</h4>
+        <ul>
+          <li><a href="index.html">Webカメラテスト</a></li>
+          <li><a href="show-camera.html">カメラ情報</a></li>
+          <li><a href="photo-capture.html">写真撮影</a></li>
+          <li><a href="resolution-test.html">解像度テスト</a></li>
+          <li><a href="call-readiness.html">通話前チェック</a></li>
+          <li><a href="qr-scanner.html">QRスキャナー</a></li>
+          <li><a href="green-screen.html">背景合成テスト</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サイト</h4>
+        <ul><li><a href="sitemap.html">サイトマップ</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/camera-utils.js"></script>
+<script>
+(() => {
+  const video = document.getElementById("video");
+  const viewfinder = document.getElementById("viewfinder");
+  const placeholder = document.getElementById("placeholder");
+  const runBtn = document.getElementById("runBtn");
+  const statusMsg = document.getElementById("statusMsg");
+  const scoreBadge = document.getElementById("scoreBadge");
+
+  const playToneBtn = document.getElementById("playToneBtn");
+  const heardBtn = document.getElementById("heardBtn");
+  const micMeter = document.getElementById("micMeter");
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  function setRow(name, state, detail) {
+    const row = document.getElementById("row" + name);
+    const icon = document.getElementById("icon" + name);
+    const det = document.getElementById("detail" + name);
+    row.className = "check-row " + state;
+    det.textContent = detail;
+    if (state === "pass") icon.textContent = "✓";
+    else if (state === "fail") icon.textContent = "!";
+    else if (state === "running") icon.textContent = "…";
+  }
+
+  function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+  async function checkCamera() {
+    setRow("Camera", "running", "カメラを起動しています…");
+    try {
+      const stream = await CamCheck.startCamera(video);
+      placeholder.style.display = "none";
+      viewfinder.classList.add("locked");
+      await sleep(500);
+      const light = CamCheck.estimateLightLevel(video);
+      const label = CamCheck.lightLabel(light);
+      if (label.cls === "pass") {
+        setRow("Camera", "pass", `映像OK ・ 明るさ ${light}（良好）`);
+      } else {
+        setRow("Camera", "fail", `映像は取得できましたが明るさに問題あり（${label.text}）`);
+      }
+      return true;
+    } catch (err) {
+      setRow("Camera", "fail", "カメラにアクセスできません: " + (err.name || err.message));
+      return false;
+    }
+  }
+
+  async function checkMic() {
+    setRow("Mic", "running", "マイクを起動しています…数秒間、声を出してみてください");
+    try {
+      const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioCtx.createMediaStreamSource(micStream);
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 512;
+      source.connect(analyser);
+      const data = new Uint8Array(analyser.frequencyBinCount);
+
+      let peak = 0;
+      const start = performance.now();
+      await new Promise((resolve) => {
+        function sample() {
+          analyser.getByteTimeDomainData(data);
+          let sum = 0;
+          for (let i = 0; i < data.length; i += 1) {
+            const v = (data[i] - 128) / 128;
+            sum += v * v;
+          }
+          const rms = Math.sqrt(sum / data.length);
+          const pct = Math.min(100, Math.round(rms * 400));
+          peak = Math.max(peak, pct);
+          micMeter.style.width = pct + "%";
+          if (performance.now() - start < 3500) {
+            requestAnimationFrame(sample);
+          } else {
+            resolve();
+          }
+        }
+        sample();
+      });
+
+      micStream.getTracks().forEach((t) => t.stop());
+      audioCtx.close();
+
+      if (peak > 8) {
+        setRow("Mic", "pass", `入力を検出しました（ピーク ${peak}%）`);
+      } else {
+        setRow("Mic", "fail", "ほとんど反応がありませんでした。マイクの設定を確認してください。");
+      }
+      return true;
+    } catch (err) {
+      setRow("Mic", "fail", "マイクにアクセスできません: " + (err.name || err.message));
+      return false;
+    }
+  }
+
+  function checkSpeaker() {
+    return new Promise((resolve) => {
+      setRow("Speaker", "running", "下のボタンでテスト音を再生し、聞こえたら「聞こえた」を押してください");
+      playToneBtn.disabled = false;
+      heardBtn.disabled = false;
+
+      playToneBtn.onclick = () => {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = 440;
+        gain.gain.value = 0.15;
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start();
+        setTimeout(() => { osc.stop(); audioCtx.close(); }, 700);
+      };
+
+      heardBtn.onclick = () => {
+        setRow("Speaker", "pass", "確認済み");
+        playToneBtn.disabled = true;
+        heardBtn.disabled = true;
+        resolve(true);
+      };
+    });
+  }
+
+  async function checkNetwork() {
+    setRow("Network", "running", "テストファイルをダウンロード中…");
+    try {
+      const url = "assets/speedtest-2mb.bin?cachebust=" + Date.now();
+      const start = performance.now();
+      const res = await fetch(url, { cache: "no-store" });
+      const blob = await res.blob();
+      const elapsedSec = (performance.now() - start) / 1000;
+      const bits = blob.size * 8;
+      const mbps = (bits / elapsedSec / 1_000_000).toFixed(1);
+
+      if (mbps >= 3) {
+        setRow("Network", "pass", `約 ${mbps} Mbps（快適な速度です）`);
+      } else if (mbps >= 1.5) {
+        setRow("Network", "fail", `約 ${mbps} Mbps（やや低速。画質を落とすと安定しやすくなります）`);
+      } else {
+        setRow("Network", "fail", `約 ${mbps} Mbps（低速。音声のみの参加も検討してください）`);
+      }
+      return true;
+    } catch (err) {
+      setRow("Network", "fail", "測定に失敗しました: " + err.message);
+      return false;
+    }
+  }
+
+  runBtn.addEventListener("click", async () => {
+    runBtn.disabled = true;
+    scoreBadge.textContent = "実行中…";
+    setStatus("順番にテストしています…");
+
+    const camOk = await checkCamera();
+    const micOk = await checkMic();
+    await checkSpeaker();
+    const netOk = await checkNetwork();
+
+    const passCount = [camOk, micOk, netOk].filter(Boolean).length;
+    scoreBadge.textContent = `${passCount + 1} / 4 項目OK`;
+    setStatus("チェック完了", "ok");
+    runBtn.disabled = false;
+    runBtn.textContent = "もう一度チェック";
+  });
+})();
+</script>
+
+<script src="js/nav.js"></script>
+
+</body>
+</html>
