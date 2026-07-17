@@ -253,11 +253,32 @@ code, .mono { font-family: var(--font-mono); }
 .viewfinder.show-grid canvas.grid-overlay { opacity: 1; }
 
 .vf-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-faint);
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
   text-align: center;
   padding: 24px;
+  max-width: min(90%, 44ch);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Ensure the output canvas in green-screen is an overlay that fills the viewfinder */
+.viewfinder canvas#outCanvas {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
 }
 
 /* AF corner brackets — the signature element */

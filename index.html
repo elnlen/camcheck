@@ -7,11 +7,9 @@
 <meta name="description" content="ブラウザだけでWebカメラをテスト。解像度・フレームレート・明るさをその場でチェックできる無料ツールです。インストール不要。" />
 <meta name="keywords" content="webカメラ テスト, カメラテスト オンライン, カメラ 動作確認, 解像度 チェック, カメラ 映らない" />
 <!-- ▼ AdSense: 自分のパブリッシャーIDに置き換えてください -->
-<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX" />
-<!--
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
--->
-<link rel="canonical" href="https://example.github.io/" />
+<meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
+<link rel="canonical" href="https://elnlen.github.io/camcheck/" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
@@ -45,7 +43,7 @@
   <section class="hero">
     <div class="hero-kicker">● Live diagnostics</div>
     <h1>Webカメラテスト — ブラウザで今すぐ確認</h1>
-    <p class="lead">「カメラを開始」を押すとアクセス許可のダイアログが出ます。許可すると、解像度・フレームレート・明るさをリアルタイムで測定します。会議の直前にここを1回開いておくだけで、本番中に「映ってますか？」と聞かれずに済むのでおすすめです。映像はどこにも送信されず、すべてこの端末内で処理されます。</p>
+    <p class="lead">「カメラを開始」を押すと、ブラウザがカメラへのアクセス許可を求めます。許可すると、解像度・フレームレート・明るさをリアルタイムで測定できます。会議前や面接前に一度確認しておくと、映像が映っていない・暗すぎる・カクついているといった問題を事前に見つけやすくなります。映像は端末内で処理され、外部に送信されません。</p>
 
     <div class="viewfinder" id="viewfinder">
       <video id="video" playsinline muted></video>
@@ -131,7 +129,7 @@
     <p>1秒間に何コマ映像を送れているかを示します。24fps以上あれば動きが滑らかに見え、15fps未満になるとカクつきが目立ちます。低照度環境ではカメラが露出を稼ぐためにフレームレートを自動的に落とすことがあります。</p>
 
     <h3>明るさ</h3>
-    <p>映像の平均輝度を0〜255のスケールで推定した値です。40未満は暗すぎて相手が見えにくく、230を超えると白飛びしています。デスクライトや窓の位置を調整して80〜200の範囲に収めるのが目安です。個人的には、背後に窓がある「逆光」状態が一番厄介だと思っていて、明るさの数値自体は悪くなくても顔だけ暗く沈むことがあります。数値が良好なのに映りがイマイチな場合は、まず光源の位置を疑ってみてください。</p>
+    <p>映像の平均輝度を0〜255のスケールで推定した値です。40未満は暗すぎて相手が見えにくく、230を超えると白飛びしています。デスクライトや窓の位置を調整して80〜200の範囲に収めるのが目安です。特に背後に窓がある「逆光」状態は、明るさの数値が良好でも顔だけが暗く見えやすい点に注意が必要です。数値が良好なのに映りがイマイチな場合は、まず光源の位置を確認してください。</p>
 
     <h2>よくある質問</h2>
 
