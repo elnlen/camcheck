@@ -8,6 +8,23 @@
 <meta name="keywords" content="ビデオ通話 事前チェック, zoom カメラ テスト, teams マイク テスト, 通話 前 確認" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
 <link rel="canonical" href="https://elnlen.github.io/camcheck/call-readiness.html" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="CamCheck" />
+<meta property="og:title" content="ビデオ通話 事前チェック — カメラ・マイク・回線を一括診断 | CamCheck" />
+<meta property="og:description" content="Zoom・Teams・Google Meetなどのビデオ通話前に、カメラ・マイク・スピーカー・回線速度をまとめてチェックできる無料ツール。" />
+<meta property="og:url" content="https://elnlen.github.io/camcheck/call-readiness.html" />
+<meta property="og:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="ビデオ通話 事前チェック — カメラ・マイク・回線を一括診断 | CamCheck" />
+<meta name="twitter:description" content="Zoom・Teams・Google Meetなどのビデオ通話前に、カメラ・マイク・スピーカー・回線速度をまとめてチェックできる無料ツール。" />
+<meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
@@ -45,18 +62,37 @@
     border: 1px solid var(--line); color: var(--text-faint);
   }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "回線速度の数値はZoomやSpeedtestの結果と違います。なぜですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "このテストは同一サイト内の小さなファイル（2MB）を1回ダウンロードする簡易測定で、大規模な速度測定サービスとは測定方法が異なります。あくまで「明らかに遅すぎないか」を確認する目安としてお使いください。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "スピーカーのテストだけ自動判定にならないのはなぜ？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ブラウザは「音が実際にユーザーの耳に届いたか」を検知できません。そのため、テスト音を再生した後、聞こえたかどうかをご自身で確認して「聞こえた」を押していただく方式にしています。"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
-      <span id="navToggleLabel">メニュー</span>
-      <span class="nav-toggle-icon">⌄</span>
-    </button>
-  </div>
-  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+    <nav class="nav" aria-label="ツールメニュー">
       <a href="index.html">Webカメラテスト</a>
       <a href="show-camera.html">カメラ情報</a>
       <a href="photo-capture.html">写真撮影</a>
@@ -64,10 +100,11 @@
       <a href="call-readiness.html" aria-current="page">通話前チェック</a>
       <a href="qr-scanner.html">QRスキャナー</a>
       <a href="green-screen.html">背景合成</a>
-      <a href="troubleshooting.html">トラブル解決</a>
+      <a href="troubleshooting.html">トラブルシューティング</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
-  </nav>
+    </nav>
+  </div>
 </header>
 
 <main class="wrap">
@@ -379,8 +416,6 @@
   });
 })();
 </script>
-
-<script src="js/nav.js"></script>
 
 </body>
 </html>

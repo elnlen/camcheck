@@ -8,21 +8,65 @@
 <meta name="keywords" content="webカメラ 写真 撮影, ブラウザ スクリーンショット カメラ, カメラ 撮影 保存" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
 <link rel="canonical" href="https://elnlen.github.io/camcheck/photo-capture.html" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="CamCheck" />
+<meta property="og:title" content="Webカメラで写真を撮影・保存 — インストール不要 | CamCheck" />
+<meta property="og:description" content="ブラウザのWebカメラでその場で写真を撮影し、PNGとして端末に保存できる無料ツール。アップロード一切なし。" />
+<meta property="og:url" content="https://elnlen.github.io/camcheck/photo-capture.html" />
+<meta property="og:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Webカメラで写真を撮影・保存 — インストール不要 | CamCheck" />
+<meta name="twitter:description" content="ブラウザのWebカメラでその場で写真を撮影し、PNGとして端末に保存できる無料ツール。アップロード一切なし。" />
+<meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "撮影した写真はどこかにアップロードされますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "されません。撮影からダウンロードまで、すべての処理はこのページを開いているブラウザ内で完結します。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "画質が粗い・ぼやける場合は？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "部屋の明るさを上げるか、カメラの最大解像度をカメラ情報ページで確認してください。多くの内蔵カメラは720p止まりで、外付けカメラの方が高画質な場合があります。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "複数枚まとめて撮影できますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "現在は1枚ずつの撮影のみ対応しています。連続撮影が必要な場合はシャッターを繰り返し押して、その都度保存してください。"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
-      <span id="navToggleLabel">メニュー</span>
-      <span class="nav-toggle-icon">⌄</span>
-    </button>
-  </div>
-  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+    <nav class="nav" aria-label="ツールメニュー">
       <a href="index.html">Webカメラテスト</a>
       <a href="show-camera.html">カメラ情報</a>
       <a href="photo-capture.html" aria-current="page">写真撮影</a>
@@ -30,10 +74,11 @@
       <a href="call-readiness.html">通話前チェック</a>
       <a href="qr-scanner.html">QRスキャナー</a>
       <a href="green-screen.html">背景合成</a>
-      <a href="troubleshooting.html">トラブル解決</a>
+      <a href="troubleshooting.html">トラブルシューティング</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
-  </nav>
+    </nav>
+  </div>
 </header>
 
 <main class="wrap">
@@ -193,8 +238,6 @@
   });
 })();
 </script>
-
-<script src="js/nav.js"></script>
 
 </body>
 </html>

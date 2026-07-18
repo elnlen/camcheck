@@ -10,21 +10,73 @@
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="CamCheck" />
+<meta property="og:title" content="CamCheck — 無料オンラインWebカメラテスト" />
+<meta property="og:description" content="ブラウザだけでWebカメラをテスト。解像度・フレームレート・明るさをその場でチェックできる無料ツールです。インストール不要。" />
+<meta property="og:url" content="https://elnlen.github.io/camcheck/" />
+<meta property="og:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="CamCheck — 無料オンラインWebカメラテスト" />
+<meta name="twitter:description" content="ブラウザだけでWebカメラをテスト。解像度・フレームレート・明るさをその場でチェックできる無料ツールです。インストール不要。" />
+<meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "カメラの映像はどこかに保存・送信されますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "いいえ。このツールはブラウザのgetUserMedia APIを使い、すべての処理を端末内で行います。映像や写真をサーバーにアップロードすることはありません。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "「カメラを開始」を押しても映像が表示されません",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "多くの場合、ブラウザの許可ダイアログで「ブロック」を選んでしまっているか、他のアプリ（Zoom、Teams、OBSなど）がカメラを占有しています。詳しい対処法はトラブルシューティングガイドをご覧ください。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "インストールや会員登録は必要ですか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不要です。このページを開くだけで、モダンブラウザなら追加のソフトなしですぐに使えます。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "スマートフォンでも使えますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "iOS Safari・Android Chromeなど主要なモバイルブラウザに対応しています。フロントカメラ・リアカメラの切り替えに対応していない端末もあるため、対応状況は下の互換性表を参照してください。"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
-      <span id="navToggleLabel">メニュー</span>
-      <span class="nav-toggle-icon">⌄</span>
-    </button>
-  </div>
-  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+    <nav class="nav" aria-label="ツールメニュー">
       <a href="index.html" aria-current="page">Webカメラテスト</a>
       <a href="show-camera.html">カメラ情報</a>
       <a href="photo-capture.html">写真撮影</a>
@@ -32,10 +84,11 @@
       <a href="call-readiness.html">通話前チェック</a>
       <a href="qr-scanner.html">QRスキャナー</a>
       <a href="green-screen.html">背景合成</a>
-      <a href="troubleshooting.html">トラブル解決</a>
+      <a href="troubleshooting.html">トラブルシューティング</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
-  </nav>
+    </nav>
+  </div>
 </header>
 
 <main class="wrap">
@@ -317,8 +370,6 @@
   });
 })();
 </script>
-
-<script src="js/nav.js"></script>
 
 </body>
 </html>

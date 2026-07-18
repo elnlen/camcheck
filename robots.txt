@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://elnlen.github.io/camcheck/sitemap.xml

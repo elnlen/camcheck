@@ -8,6 +8,23 @@
 <meta name="keywords" content="グリーンスクリーン テスト, クロマキー オンライン, カメラ 背景合成, バーチャル背景 確認" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
 <link rel="canonical" href="https://elnlen.github.io/camcheck/green-screen.html" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="CamCheck" />
+<meta property="og:title" content="グリーンスクリーン・背景合成テスト — カメラでクロマキー確認 | CamCheck" />
+<meta property="og:description" content="お手持ちのグリーンバック（またはブルーバック）とWebカメラで、リアルタイムのクロマキー合成をブラウザ上でテストできる無料ツール。" />
+<meta property="og:url" content="https://elnlen.github.io/camcheck/green-screen.html" />
+<meta property="og:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="グリーンスクリーン・背景合成テスト — カメラでクロマキー確認 | CamCheck" />
+<meta name="twitter:description" content="お手持ちのグリーンバック（またはブルーバック）とWebカメラで、リアルタイムのクロマキー合成をブラウザ上でテストできる無料ツール。" />
+<meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
@@ -52,18 +69,45 @@
   }
   .bg-mode-row button.active { border-color: var(--focus); color: var(--focus); }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "グリーンバックが無くてもAIで背景を消せますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "このツールは単色背景を透明にするクロマキー方式のため、無地の背景布がない状態でのAI的な人物抜き出しには対応していません。単色の壁やカーテンでも代用できる場合があります。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "合成した映像をビデオ通話にそのまま使えますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "このページはブラウザ内でのテスト・確認用です。実際の通話アプリ（Zoom、OBSなど）にこの合成映像を仮想カメラとして送るには、別途OBSなどの配信ソフトと連携する必要があります。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "「この瞬間を保存」で保存される画像に背景は写りますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "背景モードが「透過」の場合は、抜いた部分が透明なPNGとして保存されます。「単色」「画像」の場合は、選んだ背景と合成された状態で保存されます。"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel">
-      <span id="navToggleLabel">メニュー</span>
-      <span class="nav-toggle-icon">⌄</span>
-    </button>
-  </div>
-  <nav class="nav-panel" id="navPanel" aria-label="ツールメニュー">
+    <nav class="nav" aria-label="ツールメニュー">
       <a href="index.html">Webカメラテスト</a>
       <a href="show-camera.html">カメラ情報</a>
       <a href="photo-capture.html">写真撮影</a>
@@ -71,10 +115,11 @@
       <a href="call-readiness.html">通話前チェック</a>
       <a href="qr-scanner.html">QRスキャナー</a>
       <a href="green-screen.html" aria-current="page">背景合成</a>
-      <a href="troubleshooting.html">トラブル解決</a>
+      <a href="troubleshooting.html">トラブルシューティング</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
-  </nav>
+    </nav>
+  </div>
 </header>
 
 <main class="wrap">
@@ -420,8 +465,6 @@
   window.addEventListener("resize", resizeCanvases);
 })();
 </script>
-
-<script src="js/nav.js"></script>
 
 </body>
 </html>
