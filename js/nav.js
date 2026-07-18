@@ -1,42 +1,43 @@
 /* ============================================================
-   CamCheck — nav panel toggle
-   One button, one dropdown panel. Closes on outside click,
-   Escape, or picking a link. Label text is read off whichever
-   link has aria-current="page" so this file works unmodified
-   on every page.
+   CamCheck — mobile nav toggle
+   On wide screens .nav is just a plain horizontal row (no JS
+   involved). Below the CSS breakpoint the same <nav> becomes a
+   dropdown that this toggles open/closed.
    ============================================================ */
 
 (() => {
   const toggle = document.getElementById("navToggle");
-  const panel = document.getElementById("navPanel");
-  if (!toggle || !panel) return;
+  const nav = document.getElementById("siteNav");
+  if (!toggle || !nav) return;
 
-  const label = document.getElementById("navToggleLabel");
-  const current = panel.querySelector('a[aria-current="page"]');
-  if (label && current) label.textContent = current.textContent;
-
-  function openPanel() {
-    panel.classList.add("open");
-    toggle.setAttribute("aria-expanded", "true");
-  }
-  function closePanel() {
-    panel.classList.remove("open");
+  function closeNav() {
+    nav.classList.remove("open");
     toggle.setAttribute("aria-expanded", "false");
+  }
+  function openNav() {
+    nav.classList.add("open");
+    toggle.setAttribute("aria-expanded", "true");
   }
 
   toggle.addEventListener("click", (e) => {
     e.stopPropagation();
-    if (panel.classList.contains("open")) closePanel();
-    else openPanel();
+    if (nav.classList.contains("open")) closeNav();
+    else openNav();
   });
 
   document.addEventListener("click", (e) => {
-    if (!panel.contains(e.target) && !toggle.contains(e.target)) closePanel();
+    if (!nav.contains(e.target) && !toggle.contains(e.target)) closeNav();
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closePanel();
+    if (e.key === "Escape") closeNav();
   });
 
-  panel.querySelectorAll("a").forEach((a) => a.addEventListener("click", closePanel));
+  nav.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeNav));
+
+  // If the window is resized back past the breakpoint, drop the open state
+  // so it doesn't linger the next time the toggle becomes visible again.
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 760) closeNav();
+  });
 })();

@@ -58,7 +58,10 @@
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
-    <nav class="nav" aria-label="ツールメニュー">
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="メニューを開く">
+      <span class="nav-toggle-bars"></span>
+    </button>
+    <nav class="nav" id="siteNav" aria-label="ツールメニュー">
       <a href="index.html">Webカメラテスト</a>
       <a href="show-camera.html" aria-current="page">カメラ情報</a>
       <a href="photo-capture.html">写真撮影</a>
@@ -217,6 +220,8 @@
   });
 })();
 </script>
+
+<script src="js/nav.js"></script>
 
 </body>
 </html>
