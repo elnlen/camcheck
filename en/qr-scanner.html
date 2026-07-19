@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QR Code Scanner — Scan Instantly With Your Camera | CamCheck</title>
+<meta name="description" content="Scan QR codes on the spot using your browser's camera. No app install — decoded URLs and text are processed only on this device." />
+<meta name="keywords" content="QR code scanner, scan QR code online, browser camera QR code" />
+<meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<link rel="canonical" href="https://elnlen.github.io/camcheck/en/qr-scanner.html" />
+<link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/qr-scanner.html" />
+<link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/qr-scanner.html" />
+<link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/qr-scanner.html" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png" />
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="CamCheck" />
+<meta property="og:title" content="QR Code Scanner — Scan Instantly With Your Camera | CamCheck" />
+<meta property="og:description" content="Scan QR codes on the spot using your browser's camera. No app install — decoded URLs and text are processed only on this device." />
+<meta property="og:url" content="https://elnlen.github.io/camcheck/en/qr-scanner.html" />
+<meta property="og:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="ja_JP" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="QR Code Scanner — Scan Instantly With Your Camera | CamCheck" />
+<meta name="twitter:description" content="Scan QR codes on the spot using your browser's camera. No app install — decoded URLs and text are processed only on this device." />
+<meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is it risky to open the URL it decodes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A QR code is just an encoded string (a URL or text). Whether the destination is trustworthy is exactly the same question as with any web link — check the URL carefully before opening it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I scan several QR codes in a row?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Scanning pauses after it reads one code. Click \"Scan Again\" to read another."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What kinds of QR codes are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standard QR content like URLs, plain text, and Wi-Fi config strings gets decoded and shown as-is. Contact (vCard) and Wi-Fi QR codes are also read as text, but their settings aren't applied automatically."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">
+      <span class="nav-toggle-bars"></span>
+    </button>
+    <nav class="nav" id="siteNav" aria-label="Site tools">
+      <a href="index.html">Webcam Test</a>
+      <a href="show-camera.html">Camera Info</a>
+      <a href="photo-capture.html">Photo Capture</a>
+      <a href="resolution-test.html">Resolution Test</a>
+      <a href="call-readiness.html">Call Readiness</a>
+      <a href="qr-scanner.html" aria-current="page">QR Scanner</a>
+      <a href="green-screen.html">Green Screen</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Scan</div>
+    <h1>QR Code Scanner — Just Hold It Up to the Camera</h1>
+    <p class="lead">No app install needed. Start the camera, hold a QR code up to it, and it's detected automatically — URL or text, shown right away. Your phone's camera app can do this too, but there are more times than you'd think where reading one straight from a PC browser is what you actually need.</p>
+
+    <div class="viewfinder" id="viewfinder">
+      <video id="video" playsinline muted></video>
+      <canvas id="overlay" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></canvas>
+      <div class="vf-placeholder" id="placeholder">Camera hasn't started yet<br />Click "Start Scanning" below</div>
+      <span class="af-bracket tl"></span>
+      <span class="af-bracket tr"></span>
+      <span class="af-bracket bl"></span>
+      <span class="af-bracket br"></span>
+      <div class="hud-top">
+        <span id="hudState">Idle</span>
+        <span id="hudFps"></span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="startBtn">Start Scanning</button>
+      <button class="btn btn-ghost" id="stopBtn" disabled>Stop</button>
+      <span class="status-msg" id="statusMsg"></span>
+    </div>
+
+    <div class="spec-sheet" id="resultCard" style="display:none;margin-top:24px;">
+      <div class="spec-sheet-head"><span>Decoded Result</span><span id="resultTime">—</span></div>
+      <div style="padding:18px;">
+        <div class="k" style="font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-faint);margin-bottom:8px;">Content</div>
+        <div id="resultText" class="mono" style="font-size:1.05rem;word-break:break-all;color:var(--focus);margin-bottom:16px;"></div>
+        <div class="controls" style="margin-top:0;">
+          <a class="btn btn-primary" id="openLinkBtn" href="#" target="_blank" rel="noopener" style="display:none;">Open Link</a>
+          <button class="btn" id="copyBtn">Copy</button>
+          <button class="btn btn-ghost" id="scanAgainBtn">Scan Again</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="article">
+    <h2>How to use it</h2>
+    <ol>
+      <li><strong>Click "Start Scanning."</strong> Grant camera access when prompted.</li>
+      <li><strong>Fit the QR code inside the frame.</strong> Use the corner brackets as a guide, and move close enough for it to be in focus.</li>
+      <li><strong>It's detected automatically.</strong> The moment it's read, the content appears — click "Open Link" if it's a URL.</li>
+    </ol>
+
+    <div class="callout">
+      Decoded QR code content only ever appears in this browser's memory on this device. It is never sent to or logged on a server.
+    </div>
+
+    <h2>If it won't scan</h2>
+    <ul>
+      <li>Adjust the distance between the QR code and the camera — too close or too far both hurt recognition.</li>
+      <li>Check for glare or shadows falling across the code.</li>
+      <li>Brighten the room if the whole scene is dark — you can check camera brightness with the <a href="index.html">Webcam Test</a>.</li>
+      <li>Hold the camera or the code steady to reduce motion blur.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3>Is it risky to open the URL it decodes?</h3>
+      <p>A QR code is just an encoded string (a URL or text). Whether the destination is trustworthy is exactly the same question as with any web link — check the URL carefully before opening it.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I scan several QR codes in a row?</h3>
+      <p>Scanning pauses after it reads one code. Click "Scan Again" to read another.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What kinds of QR codes are supported?</h3>
+      <p>Standard QR content like URLs, plain text, and Wi-Fi config strings gets decoded and shown as-is. Contact (vCard) and Wi-Fi QR codes are also read as text, but their settings aren't applied automatically.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">A free set of webcam, photo, and diagnostic tools that run entirely in your browser.</p>
+      </div>
+      <div>
+        <h4>Camera tools</h4>
+        <ul>
+          <li><a href="index.html">Webcam Test</a></li>
+          <li><a href="show-camera.html">Camera Info</a></li>
+          <li><a href="photo-capture.html">Photo Capture</a></li>
+          <li><a href="resolution-test.html">Resolution Test</a></li>
+          <li><a href="call-readiness.html">Call Readiness</a></li>
+          <li><a href="qr-scanner.html">QR Scanner</a></li>
+          <li><a href="green-screen.html">Green Screen Test</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="troubleshooting.html">Troubleshooting</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="sitemap.html">Sitemap</a></li>
+          <li><a href="../qr-scanner.html">日本語</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="../js/vendor/jsQR.js"></script>
+<script src="../js/camera-utils.en.js"></script>
+<script>
+(() => {
+  const video = document.getElementById("video");
+  const overlay = document.getElementById("overlay");
+  const viewfinder = document.getElementById("viewfinder");
+  const placeholder = document.getElementById("placeholder");
+  const startBtn = document.getElementById("startBtn");
+  const stopBtn = document.getElementById("stopBtn");
+  const statusMsg = document.getElementById("statusMsg");
+  const hudState = document.getElementById("hudState");
+
+  const resultCard = document.getElementById("resultCard");
+  const resultText = document.getElementById("resultText");
+  const resultTime = document.getElementById("resultTime");
+  const openLinkBtn = document.getElementById("openLinkBtn");
+  const copyBtn = document.getElementById("copyBtn");
+  const scanAgainBtn = document.getElementById("scanAgainBtn");
+
+  const octx = overlay.getContext("2d");
+  let scanCanvas = document.createElement("canvas");
+  let sctx = scanCanvas.getContext("2d", { willReadFrequently: true });
+  let rafId = null;
+  let paused = false;
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  function resizeOverlay() {
+    const rect = viewfinder.getBoundingClientRect();
+    overlay.width = rect.width;
+    overlay.height = rect.height;
+  }
+
+  function drawBox(loc) {
+    resizeOverlay();
+    octx.clearRect(0, 0, overlay.width, overlay.height);
+    if (!loc) return;
+    const scaleX = overlay.width / video.videoWidth;
+    const scaleY = overlay.height / video.videoHeight;
+    // Mirror horizontally to match the mirrored video display.
+    const pts = [loc.topLeftCorner, loc.topRightCorner, loc.bottomRightCorner, loc.bottomLeftCorner]
+      .map((p) => ({ x: overlay.width - p.x * scaleX, y: p.y * scaleY }));
+    octx.strokeStyle = "#5fd9a0";
+    octx.lineWidth = 3;
+    octx.beginPath();
+    octx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i += 1) octx.lineTo(pts[i].x, pts[i].y);
+    octx.closePath();
+    octx.stroke();
+  }
+
+  function tick() {
+    if (paused || video.readyState !== video.HAVE_ENOUGH_DATA) {
+      rafId = requestAnimationFrame(tick);
+      return;
+    }
+    scanCanvas.width = video.videoWidth;
+    scanCanvas.height = video.videoHeight;
+    sctx.drawImage(video, 0, 0, scanCanvas.width, scanCanvas.height);
+    const imageData = sctx.getImageData(0, 0, scanCanvas.width, scanCanvas.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
+
+    if (code && code.data) {
+      drawBox(code.location);
+      onDecoded(code.data);
+      return;
+    }
+    drawBox(null);
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function onDecoded(text) {
+    paused = true;
+    hudState.textContent = "Detected";
+    resultText.textContent = text;
+    resultTime.textContent = new Date().toLocaleTimeString("en-US");
+    resultCard.style.display = "block";
+
+    if (/^https?:\/\//i.test(text)) {
+      openLinkBtn.href = text;
+      openLinkBtn.style.display = "inline-block";
+    } else {
+      openLinkBtn.style.display = "none";
+    }
+    setStatus("Scan complete", "ok");
+  }
+
+  startBtn.addEventListener("click", async () => {
+    setStatus("Starting camera…");
+    startBtn.disabled = true;
+    resultCard.style.display = "none";
+    try {
+      await CamCheck.startCamera(video, {
+        video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false,
+      });
+      placeholder.style.display = "none";
+      viewfinder.classList.add("locked");
+      stopBtn.disabled = false;
+      hudState.textContent = "Scanning…";
+      setStatus("Hold the QR code inside the frame", "ok");
+      paused = false;
+      resizeOverlay();
+      rafId = requestAnimationFrame(tick);
+    } catch (err) {
+      startBtn.disabled = false;
+      setStatus(err.name === "NotAllowedError" ? "Camera access was denied." : "Error: " + err.message, "error");
+    }
+  });
+
+  stopBtn.addEventListener("click", () => {
+    cancelAnimationFrame(rafId);
+    CamCheck.stopCamera();
+    viewfinder.classList.remove("locked");
+    placeholder.style.display = "block";
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    octx.clearRect(0, 0, overlay.width, overlay.height);
+    setStatus("Stopped");
+  });
+
+  copyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(resultText.textContent);
+      setStatus("Copied", "ok");
+    } catch {
+      setStatus("Couldn't copy — select the text manually.", "error");
+    }
+  });
+
+  scanAgainBtn.addEventListener("click", () => {
+    resultCard.style.display = "none";
+    hudState.textContent = "Scanning…";
+    setStatus("Hold the QR code inside the frame", "ok");
+    paused = false;
+    rafId = requestAnimationFrame(tick);
+  });
+})();
+</script>
+
+<script src="../js/nav.js"></script>
+
+</body>
+</html>

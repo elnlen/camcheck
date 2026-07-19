@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Take &amp; Save Webcam Photos — No Install Required | CamCheck</title>
+<meta name="description" content="Snap a photo with your webcam right in your browser and save it as a PNG. No install, no upload." />
+<meta name="keywords" content="webcam photo capture, browser camera screenshot, take and save camera photo" />
+<meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<link rel="canonical" href="https://elnlen.github.io/camcheck/en/photo-capture.html" />
+<link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/photo-capture.html" />
+<link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/photo-capture.html" />
+<link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/photo-capture.html" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png" />
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="CamCheck" />
+<meta property="og:title" content="Take &amp; Save Webcam Photos — No Install Required | CamCheck" />
+<meta property="og:description" content="Snap a photo with your webcam right in your browser and save it as a PNG. No install, no upload." />
+<meta property="og:url" content="https://elnlen.github.io/camcheck/en/photo-capture.html" />
+<meta property="og:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="ja_JP" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Take &amp; Save Webcam Photos — No Install Required | CamCheck" />
+<meta name="twitter:description" content="Snap a photo with your webcam right in your browser and save it as a PNG. No install, no upload." />
+<meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is my photo uploaded anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. From capture to download, everything happens inside the browser tab where this page is open."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the photo looks grainy or blurry?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Try brightening the room, or check your camera's max resolution on the Camera Info page. Many built-in cameras cap out at 720p, and an external camera can often do better."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I take several photos at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Right now it's one photo at a time. If you need a burst, just press the shutter repeatedly and save each one as you go."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">
+      <span class="nav-toggle-bars"></span>
+    </button>
+    <nav class="nav" id="siteNav" aria-label="Site tools">
+      <a href="index.html">Webcam Test</a>
+      <a href="show-camera.html">Camera Info</a>
+      <a href="photo-capture.html" aria-current="page">Photo Capture</a>
+      <a href="resolution-test.html">Resolution Test</a>
+      <a href="call-readiness.html">Call Readiness</a>
+      <a href="qr-scanner.html">QR Scanner</a>
+      <a href="green-screen.html">Green Screen</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Shutter</div>
+    <h1>Photo Capture — Shoot With Your Webcam, Save Instantly</h1>
+    <p class="lead">Fire up the camera, frame your shot, and hit the shutter to save it as a PNG on the spot. Your photo never leaves this device — it's not sent anywhere. Built this for the moments you just want a quick headshot without opening some heavier app.</p>
+
+    <div class="viewfinder" id="viewfinder">
+      <video id="video" playsinline muted></video>
+      <img id="preview" alt="Captured preview" style="width:100%;height:100%;object-fit:cover;display:none;" />
+      <div class="vf-placeholder" id="placeholder">Camera hasn't started yet<br />Click "Start Camera" below</div>
+      <span class="af-bracket tl"></span>
+      <span class="af-bracket tr"></span>
+      <span class="af-bracket bl"></span>
+      <span class="af-bracket br"></span>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="startBtn">Start Camera</button>
+      <button class="btn" id="shutterBtn" disabled>Shutter</button>
+      <button class="btn btn-ghost" id="retakeBtn" style="display:none;">Retake</button>
+      <a class="btn btn-ghost" id="downloadBtn" style="display:none;" download="camcheck-photo.png">Save</a>
+      <span class="status-msg" id="statusMsg"></span>
+    </div>
+  </section>
+
+
+  <section class="article">
+    <h2>How to use it</h2>
+    <ol>
+      <li><strong>Click "Start Camera."</strong> Grant access and the video shows up.</li>
+      <li><strong>Frame your shot.</strong> You're ready once the corner brackets turn green.</li>
+      <li><strong>Click "Shutter."</strong> That exact frame gets captured as a still.</li>
+      <li><strong>Hit "Save" to download the PNG,</strong> or "Retake" if you're not happy with it.</li>
+    </ol>
+
+    <div class="callout">
+      Your captured image only exists in the browser's memory. Reload or close the page and it's gone unless you saved it.
+    </div>
+
+    <h2>Tips for a better shot</h2>
+    <p>You can find these tips anywhere, but after a few hundred test shots with this tool, the one thing that consistently mattered most was light.</p>
+    <ul>
+      <li>Line the camera up with your face, at eye level.</li>
+      <li>Put the light source in front of you or to the side — not behind you (avoid backlighting). Get this right and it papers over most of the gap between a cheap and an expensive camera.</li>
+      <li>If the background is cluttered, shoot in front of a plain wall.</li>
+      <li>Check your camera's max resolution ahead of time with the <a href="resolution-test.html">Resolution Test</a> so you're not surprised by a grainier shot than expected.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3>Is my photo uploaded anywhere?</h3>
+      <p>No. From capture to download, everything happens inside the browser tab where this page is open.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What if the photo looks grainy or blurry?</h3>
+      <p>Try brightening the room, or check your camera's max resolution on the <a href="show-camera.html">Camera Info</a> page. Many built-in cameras cap out at 720p, and an external camera can often do better.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I take several photos at once?</h3>
+      <p>Right now it's one photo at a time. If you need a burst, just press the shutter repeatedly and save each one as you go.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">A free set of webcam, photo, and diagnostic tools that run entirely in your browser.</p>
+      </div>
+      <div>
+        <h4>Camera tools</h4>
+        <ul>
+          <li><a href="index.html">Webcam Test</a></li>
+          <li><a href="show-camera.html">Camera Info</a></li>
+          <li><a href="photo-capture.html">Photo Capture</a></li>
+          <li><a href="resolution-test.html">Resolution Test</a></li>
+          <li><a href="call-readiness.html">Call Readiness</a></li>
+          <li><a href="qr-scanner.html">QR Scanner</a></li>
+          <li><a href="green-screen.html">Green Screen Test</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="troubleshooting.html">Troubleshooting</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="sitemap.html">Sitemap</a></li>
+          <li><a href="../photo-capture.html">日本語</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="../js/camera-utils.en.js"></script>
+<script>
+(() => {
+  const video = document.getElementById("video");
+  const preview = document.getElementById("preview");
+  const viewfinder = document.getElementById("viewfinder");
+  const placeholder = document.getElementById("placeholder");
+  const startBtn = document.getElementById("startBtn");
+  const shutterBtn = document.getElementById("shutterBtn");
+  const retakeBtn = document.getElementById("retakeBtn");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const statusMsg = document.getElementById("statusMsg");
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  startBtn.addEventListener("click", async () => {
+    setStatus("Starting camera…");
+    startBtn.disabled = true;
+    try {
+      await CamCheck.startCamera(video);
+      placeholder.style.display = "none";
+      viewfinder.classList.add("locked");
+      shutterBtn.disabled = false;
+      setStatus("Ready. Click the shutter.", "ok");
+    } catch (err) {
+      startBtn.disabled = false;
+      setStatus(err.name === "NotAllowedError" ? "Camera access was denied." : "Error: " + err.message, "error");
+    }
+  });
+
+  shutterBtn.addEventListener("click", () => {
+    const dataUrl = CamCheck.captureFrame(video, true);
+    preview.src = dataUrl;
+    preview.style.display = "block";
+    video.style.display = "none";
+    shutterBtn.style.display = "none";
+    retakeBtn.style.display = "inline-block";
+    downloadBtn.style.display = "inline-block";
+    downloadBtn.href = dataUrl;
+    setStatus("Captured", "ok");
+  });
+
+  retakeBtn.addEventListener("click", () => {
+    preview.style.display = "none";
+    video.style.display = "block";
+    shutterBtn.style.display = "inline-block";
+    retakeBtn.style.display = "none";
+    downloadBtn.style.display = "none";
+    setStatus("Ready. Click the shutter.", "ok");
+  });
+})();
+</script>
+
+<script src="../js/nav.js"></script>
+
+</body>
+</html>

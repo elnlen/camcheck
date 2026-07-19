@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Show Camera Info — See Details on Connected Webcams | CamCheck</title>
+<meta name="description" content="List every webcam available on this device and check detailed specs like max resolution and max frame rate — free." />
+<meta name="keywords" content="check camera device name, webcam specs, list connected cameras" />
+<meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<link rel="canonical" href="https://elnlen.github.io/camcheck/en/show-camera.html" />
+<link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/show-camera.html" />
+<link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/show-camera.html" />
+<link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/show-camera.html" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png" />
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="CamCheck" />
+<meta property="og:title" content="Show Camera Info — See Details on Connected Webcams | CamCheck" />
+<meta property="og:description" content="List every webcam available on this device and check detailed specs like max resolution and max frame rate — free." />
+<meta property="og:url" content="https://elnlen.github.io/camcheck/en/show-camera.html" />
+<meta property="og:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="ja_JP" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Show Camera Info — See Details on Connected Webcams | CamCheck" />
+<meta name="twitter:description" content="List every webcam available on this device and check detailed specs like max resolution and max frame rate — free." />
+<meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why doesn't the device name show up at first?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For privacy, browsers hide the full device name until you grant camera access. Click \"Scan Cameras\" and allow access to see the real device name."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use an external camera and the built-in one at the same time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can switch between devices in the list to test them individually, but as with most video call apps, only one can stream at a time."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">
+      <span class="nav-toggle-bars"></span>
+    </button>
+    <nav class="nav" id="siteNav" aria-label="Site tools">
+      <a href="index.html">Webcam Test</a>
+      <a href="show-camera.html" aria-current="page">Camera Info</a>
+      <a href="photo-capture.html">Photo Capture</a>
+      <a href="resolution-test.html">Resolution Test</a>
+      <a href="call-readiness.html">Call Readiness</a>
+      <a href="qr-scanner.html">QR Scanner</a>
+      <a href="green-screen.html">Green Screen</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Device inventory</div>
+    <h1>Camera Info — See Every Connected Webcam</h1>
+    <p class="lead">Open this page and it automatically detects the cameras attached to your device — device name, max resolution, and max frame rate, all in one list. If you're on the fence about buying a new external camera, these numbers alone are often enough to decide.</p>
+
+    <div class="controls" style="margin-top:0;">
+      <button class="btn btn-primary" id="scanBtn">Scan Cameras</button>
+      <span class="status-msg" id="statusMsg"></span>
+    </div>
+
+    <div id="deviceList" style="margin-top:24px;display:grid;gap:14px;"></div>
+  </section>
+
+
+  <section class="article">
+    <h2>What this tool shows you</h2>
+    <ul>
+      <li><strong>Device name</strong> — the label your OS assigns to the camera. Useful for telling multiple cameras apart.</li>
+      <li><strong>Max resolution</strong> — the highest resolution the camera can theoretically output. What you actually stream depends on the app's own settings.</li>
+      <li><strong>Max frame rate</strong> — the most frames per second it can output. Higher means smoother video.</li>
+      <li><strong>Zoom / focus support</strong> — whether the camera exposes controls the browser can drive.</li>
+    </ul>
+
+    <div class="callout">
+      Some browsers anonymize the device name (e.g. "camera 1") until you've granted access. Click "Scan Cameras" and allow access once to see the real names.
+    </div>
+
+    <h2>If multiple cameras aren't being detected</h2>
+    <p>Even with both a laptop's built-in camera and an external USB camera connected, browsers generally enumerate every device. If only some show up, check that your OS is allowing the browser access to the camera, and make sure no other app is holding the device exclusively. See the <a href="troubleshooting.html">troubleshooting guide</a> for more detailed steps.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3>Why doesn't the device name show up at first?</h3>
+      <p>For privacy, browsers hide the full device name until you grant camera access. Click "Scan Cameras" and allow access to see the real device name.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Can I use an external camera and the built-in one at the same time?</h3>
+      <p>You can switch between devices in the list to test them individually, but as with most video call apps, only one can stream at a time.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">A free set of webcam, photo, and diagnostic tools that run entirely in your browser.</p>
+      </div>
+      <div>
+        <h4>Camera tools</h4>
+        <ul>
+          <li><a href="index.html">Webcam Test</a></li>
+          <li><a href="show-camera.html">Camera Info</a></li>
+          <li><a href="photo-capture.html">Photo Capture</a></li>
+          <li><a href="resolution-test.html">Resolution Test</a></li>
+          <li><a href="call-readiness.html">Call Readiness</a></li>
+          <li><a href="qr-scanner.html">QR Scanner</a></li>
+          <li><a href="green-screen.html">Green Screen Test</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="troubleshooting.html">Troubleshooting</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="sitemap.html">Sitemap</a></li>
+          <li><a href="../show-camera.html">日本語</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="../js/camera-utils.en.js"></script>
+<script>
+(() => {
+  const scanBtn = document.getElementById("scanBtn");
+  const deviceList = document.getElementById("deviceList");
+  const statusMsg = document.getElementById("statusMsg");
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  function renderCard(dev, settings) {
+    const caps = settings ? settings.capabilities : {};
+    const maxW = caps && caps.width ? caps.width.max : null;
+    const maxH = caps && caps.height ? caps.height.max : null;
+    const maxFps = caps && caps.frameRate ? Math.round(caps.frameRate.max) : null;
+
+    const div = document.createElement("div");
+    div.className = "spec-sheet";
+    div.innerHTML = `
+      <div class="spec-sheet-head"><span>${dev.label || "Unnamed camera"}</span><span>${dev.deviceId ? dev.deviceId.slice(0,10) + "…" : ""}</span></div>
+      <div class="spec-grid">
+        <div class="spec-item"><div class="k">Max resolution</div><div class="v ${maxW ? "pass" : ""}">${maxW && maxH ? maxW + "×" + maxH : "Unknown (grant access)"}</div></div>
+        <div class="spec-item"><div class="k">Max frame rate</div><div class="v ${maxFps ? "pass" : ""}">${maxFps ? maxFps + " fps" : "Unknown"}</div></div>
+        <div class="spec-item"><div class="k">Zoom support</div><div class="v">${caps && caps.zoom ? "Supported" : "Not supported / unknown"}</div></div>
+        <div class="spec-item"><div class="k">Facing</div><div class="v">${settings && settings.facingMode ? settings.facingMode : "Desktop / unknown"}</div></div>
+      </div>`;
+    return div;
+  }
+
+  scanBtn.addEventListener("click", async () => {
+    setStatus("Scanning…");
+    deviceList.innerHTML = "";
+    try {
+      // Requesting a throwaway stream first unlocks full device labels.
+      const tempStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const devices = await CamCheck.listCameras();
+
+      if (devices.length === 0) {
+        setStatus("No cameras found.", "error");
+      } else {
+        setStatus(`Found ${devices.length} camera(s)`, "ok");
+      }
+
+      const activeSettings = CamCheck.readTrackSettings(tempStream);
+
+      devices.forEach((dev, i) => {
+        const settings = i === 0 ? activeSettings : null;
+        deviceList.appendChild(renderCard(dev, settings));
+      });
+
+      tempStream.getTracks().forEach((t) => t.stop());
+    } catch (err) {
+      if (err.name === "NotAllowedError") {
+        setStatus("Access was denied. Check your browser's permission settings.", "error");
+      } else {
+        setStatus("Error: " + err.message, "error");
+      }
+    }
+  });
+})();
+</script>
+
+<script src="../js/nav.js"></script>
+
+</body>
+</html>

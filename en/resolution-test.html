@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Camera Resolution Test — See What It Actually Streams | CamCheck</title>
+<meta name="description" content="Requests 720p, 1080p, 4K and more in sequence from the browser to show what resolution your webcam actually delivers — free." />
+<meta name="keywords" content="webcam resolution test, check camera 1080p, camera quality diagnostic" />
+<meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<link rel="canonical" href="https://elnlen.github.io/camcheck/en/resolution-test.html" />
+<link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/resolution-test.html" />
+<link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/resolution-test.html" />
+<link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/resolution-test.html" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png" />
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="CamCheck" />
+<meta property="og:title" content="Camera Resolution Test — See What It Actually Streams | CamCheck" />
+<meta property="og:description" content="Requests 720p, 1080p, 4K and more in sequence from the browser to show what resolution your webcam actually delivers — free." />
+<meta property="og:url" content="https://elnlen.github.io/camcheck/en/resolution-test.html" />
+<meta property="og:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="ja_JP" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Camera Resolution Test — See What It Actually Streams | CamCheck" />
+<meta name="twitter:description" content="Requests 720p, 1080p, 4K and more in sequence from the browser to show what resolution your webcam actually delivers — free." />
+<meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "It says \"4K\" but I only get 1080p in practice",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "\"4K\" on the box often refers to the still-photo sensor resolution, not video streaming. Video streaming has its own, usually lower, cap — and driver or USB bandwidth limits can push it lower still."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the picture freeze briefly during the test?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The camera briefly reinitializes each time it switches resolution, so a fraction of a second to about a second of freeze is normal — it's not a malfunction."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">
+      <span class="nav-toggle-bars"></span>
+    </button>
+    <nav class="nav" id="siteNav" aria-label="Site tools">
+      <a href="index.html">Webcam Test</a>
+      <a href="show-camera.html">Camera Info</a>
+      <a href="photo-capture.html">Photo Capture</a>
+      <a href="resolution-test.html" aria-current="page">Resolution Test</a>
+      <a href="call-readiness.html">Call Readiness</a>
+      <a href="qr-scanner.html">QR Scanner</a>
+      <a href="green-screen.html">Green Screen</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Resolution sweep</div>
+    <h1>Resolution Test — What Your Camera Really Supports</h1>
+    <p class="lead">Forget the spec sheet — this asks your browser directly. It requests everything from 480p up to 4K, one after another, and records the resolution the camera actually returned. I've seen plenty of "4K-capable" products that top out at 1080p for video, so it's worth checking here before you buy, or before you rely on it.</p>
+
+    <div class="viewfinder" id="viewfinder" style="aspect-ratio:16/9;">
+      <video id="video" playsinline muted></video>
+      <div class="vf-placeholder" id="placeholder">Click "Start Test" and each resolution will be tried in turn</div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="startBtn">Start Test</button>
+      <span class="status-msg" id="statusMsg"></span>
+    </div>
+
+    <div class="spec-sheet" style="margin-top:24px;">
+      <div class="spec-sheet-head"><span>Resolution Sweep Results</span><span id="progress">0 / 5</span></div>
+      <div class="spec-grid" id="resultsGrid">
+        <div class="spec-item"><div class="k">480p (SD)</div><div class="v" id="r480">Not tested</div></div>
+        <div class="spec-item"><div class="k">720p (HD)</div><div class="v" id="r720">Not tested</div></div>
+        <div class="spec-item"><div class="k">1080p (Full HD)</div><div class="v" id="r1080">Not tested</div></div>
+        <div class="spec-item"><div class="k">1440p (QHD)</div><div class="v" id="r1440">Not tested</div></div>
+        <div class="spec-item"><div class="k">2160p (4K)</div><div class="v" id="r2160">Not tested</div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="article">
+    <h2>How this test works</h2>
+    <p>The web standard <code>getUserMedia</code> lets you request an "ideal" resolution. This tool requests five steps from SD up to 4K, in order, and records exactly what the camera and driver hand back. It's common for that number to differ from the maximum resolution printed on the box.</p>
+
+    <div class="callout">
+      Most built-in laptop cameras cap out at 720p. If you want reliable 1080p or better, an external USB webcam is worth considering.
+    </div>
+
+    <h2>How to read the results</h2>
+    <ul>
+      <li><strong>Green (supported)</strong> — responded at the requested resolution, or close to it.</li>
+      <li><strong>Yellow (approximate)</strong> — couldn't get the requested resolution; the camera fell back to its nearest supported value.</li>
+      <li><strong>Red (unsupported)</strong> — access at that resolution failed outright.</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3>It says "4K" but I only get 1080p in practice</h3>
+      <p>"4K" on the box often refers to the still-photo sensor resolution, not video streaming. Video streaming has its own, usually lower, cap — and driver or USB bandwidth limits can push it lower still.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Does the picture freeze briefly during the test?</h3>
+      <p>The camera briefly reinitializes each time it switches resolution, so a fraction of a second to about a second of freeze is normal — it's not a malfunction.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">A free set of webcam, photo, and diagnostic tools that run entirely in your browser.</p>
+      </div>
+      <div>
+        <h4>Camera tools</h4>
+        <ul>
+          <li><a href="index.html">Webcam Test</a></li>
+          <li><a href="show-camera.html">Camera Info</a></li>
+          <li><a href="photo-capture.html">Photo Capture</a></li>
+          <li><a href="resolution-test.html">Resolution Test</a></li>
+          <li><a href="call-readiness.html">Call Readiness</a></li>
+          <li><a href="qr-scanner.html">QR Scanner</a></li>
+          <li><a href="green-screen.html">Green Screen Test</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="troubleshooting.html">Troubleshooting</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="sitemap.html">Sitemap</a></li>
+          <li><a href="../resolution-test.html">日本語</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="../js/camera-utils.en.js"></script>
+<script>
+(() => {
+  const video = document.getElementById("video");
+  const viewfinder = document.getElementById("viewfinder");
+  const placeholder = document.getElementById("placeholder");
+  const startBtn = document.getElementById("startBtn");
+  const statusMsg = document.getElementById("statusMsg");
+  const progress = document.getElementById("progress");
+
+  const targets = [
+    { id: "r480", w: 640, h: 480, label: "480p" },
+    { id: "r720", w: 1280, h: 720, label: "720p" },
+    { id: "r1080", w: 1920, h: 1080, label: "1080p" },
+    { id: "r1440", w: 2560, h: 1440, label: "1440p" },
+    { id: "r2160", w: 3840, h: 2160, label: "2160p" },
+  ];
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+  startBtn.addEventListener("click", async () => {
+    startBtn.disabled = true;
+    placeholder.style.display = "none";
+    setStatus("Testing…");
+
+    for (let i = 0; i < targets.length; i += 1) {
+      const t = targets[i];
+      progress.textContent = `${i + 1} / ${targets.length}`;
+      const el = document.getElementById(t.id);
+      el.textContent = "Testing…";
+      el.className = "v";
+
+      try {
+        const stream = await CamCheck.startCamera(video, {
+          video: { width: { ideal: t.w }, height: { ideal: t.h } },
+          audio: false,
+        });
+        viewfinder.classList.add("locked");
+        await sleep(400);
+        const settings = CamCheck.readTrackSettings(stream);
+        const gotW = settings.width, gotH = settings.height;
+
+        if (gotW >= t.w * 0.95 && gotH >= t.h * 0.95) {
+          el.textContent = `Supported (${gotW}×${gotH})`;
+          el.className = "v pass";
+        } else {
+          el.textContent = `Approximate (${gotW}×${gotH})`;
+          el.className = "v warn-v";
+        }
+      } catch (err) {
+        el.textContent = "Unsupported";
+        el.className = "v fail";
+      }
+      await sleep(300);
+    }
+
+    CamCheck.stopCamera();
+    setStatus("Test complete", "ok");
+    startBtn.disabled = false;
+    startBtn.textContent = "Test again";
+  });
+})();
+</script>
+
+<script src="../js/nav.js"></script>
+
+</body>
+</html>

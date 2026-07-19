@@ -142,17 +142,17 @@ const CamCheck = (() => {
 
   function lightLabel(level) {
     if (level === null) return { text: "—", cls: "" };
-    if (level < 40) return { text: `${level} ・ 暗すぎ`, cls: "fail" };
-    if (level < 80) return { text: `${level} ・ やや暗い`, cls: "warn-v" };
-    if (level > 230) return { text: `${level} ・ 白飛び`, cls: "warn-v" };
-    return { text: `${level} ・ 良好`, cls: "pass" };
+    if (level < 40) return { text: `${level} · Too dark`, cls: "fail" };
+    if (level < 80) return { text: `${level} · Low light`, cls: "warn-v" };
+    if (level > 230) return { text: `${level} · Overexposed`, cls: "warn-v" };
+    return { text: `${level} · Good`, cls: "pass" };
   }
 
   function fpsLabel(fps) {
     if (!fps) return { text: "—", cls: "" };
-    if (fps < 15) return { text: `${fps} fps ・ カクつく`, cls: "fail" };
-    if (fps < 24) return { text: `${fps} fps ・ まずまず`, cls: "warn-v" };
-    return { text: `${fps} fps ・ 滑らか`, cls: "pass" };
+    if (fps < 15) return { text: `${fps} fps · Choppy`, cls: "fail" };
+    if (fps < 24) return { text: `${fps} fps · Okay`, cls: "warn-v" };
+    return { text: `${fps} fps · Smooth`, cls: "pass" };
   }
 
   function resLabel(w, h) {
@@ -163,7 +163,7 @@ const CamCheck = (() => {
     if (px >= 3840 * 2160 * 0.9) { tag = "4K"; cls = "pass"; }
     else if (px >= 1920 * 1080 * 0.9) { tag = "1080p"; cls = "pass"; }
     else if (px >= 1280 * 720 * 0.9) { tag = "720p"; cls = "pass"; }
-    return { text: `${w}×${h} ・ ${tag}`, cls };
+    return { text: `${w}×${h} · ${tag}`, cls };
   }
 
   return {

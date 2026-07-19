@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Video Call Pre-Check — Camera, Mic &amp; Connection in One Go | CamCheck</title>
+<meta name="description" content="Before a Zoom, Teams, or Google Meet call, check your camera, mic, speakers, and connection speed all at once — free." />
+<meta name="keywords" content="video call pre-check, zoom camera test, teams mic test, check before call" />
+<meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<link rel="canonical" href="https://elnlen.github.io/camcheck/en/call-readiness.html" />
+<link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/call-readiness.html" />
+<link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/call-readiness.html" />
+<link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/call-readiness.html" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png" />
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="CamCheck" />
+<meta property="og:title" content="Video Call Pre-Check — Camera, Mic &amp; Connection in One Go | CamCheck" />
+<meta property="og:description" content="Before a Zoom, Teams, or Google Meet call, check your camera, mic, speakers, and connection speed all at once — free." />
+<meta property="og:url" content="https://elnlen.github.io/camcheck/en/call-readiness.html" />
+<meta property="og:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="ja_JP" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Video Call Pre-Check — Camera, Mic &amp; Connection in One Go | CamCheck" />
+<meta name="twitter:description" content="Before a Zoom, Teams, or Google Meet call, check your camera, mic, speakers, and connection speed all at once — free." />
+<meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--panel);
+    margin-bottom: 10px;
+  }
+  .check-icon {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 0.85rem; flex: none;
+    border: 1px solid var(--line); color: var(--text-faint);
+  }
+  .check-row.pass .check-icon { border-color: var(--focus); color: var(--focus); }
+  .check-row.fail .check-icon { border-color: var(--rec); color: var(--rec); }
+  .check-row.running .check-icon { border-color: var(--warn); color: var(--warn); }
+  .check-body { flex: 1; min-width: 0; }
+  .check-title { font-weight: 600; font-size: 0.95rem; }
+  .check-detail { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-faint); margin-top: 2px; }
+  .meter {
+    height: 8px; border-radius: 4px; background: var(--panel-raised);
+    overflow: hidden; margin-top: 8px; border: 1px solid var(--line);
+  }
+  .meter-fill { height: 100%; width: 0%; background: var(--focus); transition: width 0.08s linear; }
+  .score-badge {
+    font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.05em; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--text-faint);
+  }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "The speed number doesn't match Zoom or Speedtest. Why?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This test is a quick, one-time download of a small (2MB) file hosted on this same site — a different method than large-scale speed test services use. Treat it as a rough check for whether your connection is obviously too slow, not an official measurement."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why isn't the speaker test automatic like the others?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A browser has no way to detect whether sound actually reached your ears. That's why this plays a test tone and then asks you to confirm you heard it by clicking a button."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">
+      <span class="nav-toggle-bars"></span>
+    </button>
+    <nav class="nav" id="siteNav" aria-label="Site tools">
+      <a href="index.html">Webcam Test</a>
+      <a href="show-camera.html">Camera Info</a>
+      <a href="photo-capture.html">Photo Capture</a>
+      <a href="resolution-test.html">Resolution Test</a>
+      <a href="call-readiness.html" aria-current="page">Call Readiness</a>
+      <a href="qr-scanner.html">QR Scanner</a>
+      <a href="green-screen.html">Green Screen</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Pre-call diagnostics</div>
+    <h1>Video Call Pre-Check</h1>
+    <p class="lead">Check your camera, mic, speakers, and connection speed all at once before joining Zoom, Teams, Google Meet, or anything else. Click "Check Everything" and it runs through each test automatically. Running this before an interview or an important call surfaces equipment problems early, so you're not scrambling right before it starts.</p>
+
+    <div class="viewfinder" id="viewfinder" style="aspect-ratio:16/9;">
+      <video id="video" playsinline muted></video>
+      <div class="vf-placeholder" id="placeholder">Click "Check Everything" to start</div>
+      <span class="af-bracket tl"></span>
+      <span class="af-bracket tr"></span>
+      <span class="af-bracket bl"></span>
+      <span class="af-bracket br"></span>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="runBtn">Check Everything</button>
+      <span class="status-msg" id="statusMsg"></span>
+      <span class="score-badge" id="scoreBadge" style="margin-left:auto;">Not run</span>
+    </div>
+
+    <div style="margin-top:22px;">
+      <div class="check-row" id="rowCamera">
+        <div class="check-icon" id="iconCamera">1</div>
+        <div class="check-body">
+          <div class="check-title">Camera</div>
+          <div class="check-detail" id="detailCamera">Not run</div>
+        </div>
+      </div>
+
+      <div class="check-row" id="rowMic">
+        <div class="check-icon" id="iconMic">2</div>
+        <div class="check-body">
+          <div class="check-title">Microphone</div>
+          <div class="check-detail" id="detailMic">Not run</div>
+          <div class="meter"><div class="meter-fill" id="micMeter"></div></div>
+        </div>
+      </div>
+
+      <div class="check-row" id="rowSpeaker">
+        <div class="check-icon" id="iconSpeaker">3</div>
+        <div class="check-body">
+          <div class="check-title">Speaker</div>
+          <div class="check-detail" id="detailSpeaker">Not run — once the test tone plays, click "I heard it"</div>
+          <div class="controls" style="margin-top:8px;">
+            <button class="btn" id="playToneBtn" disabled>Play Test Tone</button>
+            <button class="btn btn-ghost" id="heardBtn" disabled>I Heard It</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="check-row" id="rowNetwork">
+        <div class="check-icon" id="iconNetwork">4</div>
+        <div class="check-body">
+          <div class="check-title">Connection speed (rough estimate)</div>
+          <div class="check-detail" id="detailNetwork">Not run</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="article">
+    <h2>What's being tested</h2>
+    <ul>
+      <li><strong>Camera</strong> — whether video can be captured, and whether it's unusually dark.</li>
+      <li><strong>Microphone</strong> — whether there's audio input at all, checked with a live level meter. Say something out loud for a few seconds.</li>
+      <li><strong>Speaker</strong> — whether a test tone actually reaches your speakers or headphones, confirmed by you (this can't be detected automatically).</li>
+      <li><strong>Connection speed</strong> — an estimated download speed based on how long it takes to fetch a 2MB file from this site. A rough guide, not an official speed measurement.</li>
+    </ul>
+
+    <div class="callout">
+      Video and audio are processed only on this device and never sent anywhere. The connection speed check uses only a 2MB test file hosted by this site itself — no third-party service is contacted.
+    </div>
+
+    <h2>Rough benchmarks</h2>
+    <table class="compat">
+      <thead><tr><th>Item</th><th>Comfortable</th><th>Worth a closer look</th></tr></thead>
+      <tbody>
+        <tr><td>Camera brightness</td><td>80–200</td><td>Under 40 or over 230</td></tr>
+        <tr><td>Mic input</td><td>Clear response when speaking</td><td>Weak or no response</td></tr>
+        <tr><td>Connection speed (down)</td><td>3 Mbps or higher</td><td>Under 1.5 Mbps</td></tr>
+      </tbody>
+    </table>
+
+    <h2>If a check turns up a problem</h2>
+    <p>For camera or mic issues, check the <a href="troubleshooting.html">troubleshooting guide</a>. For a closer look at picture quality, try the <a href="resolution-test.html">Resolution Test</a>.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <h3>The speed number doesn't match Zoom or Speedtest. Why?</h3>
+      <p>This test is a quick, one-time download of a small (2MB) file hosted on this same site — a different method than large-scale speed test services use. Treat it as a rough check for whether your connection is obviously too slow, not an official measurement.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Why isn't the speaker test automatic like the others?</h3>
+      <p>A browser has no way to detect whether sound actually reached your ears. That's why this plays a test tone and then asks you to confirm you heard it by clicking a button.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">A free set of webcam, photo, and diagnostic tools that run entirely in your browser.</p>
+      </div>
+      <div>
+        <h4>Camera tools</h4>
+        <ul>
+          <li><a href="index.html">Webcam Test</a></li>
+          <li><a href="show-camera.html">Camera Info</a></li>
+          <li><a href="photo-capture.html">Photo Capture</a></li>
+          <li><a href="resolution-test.html">Resolution Test</a></li>
+          <li><a href="call-readiness.html">Call Readiness</a></li>
+          <li><a href="qr-scanner.html">QR Scanner</a></li>
+          <li><a href="green-screen.html">Green Screen Test</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="troubleshooting.html">Troubleshooting</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="sitemap.html">Sitemap</a></li>
+          <li><a href="../call-readiness.html">日本語</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="../js/camera-utils.en.js"></script>
+<script>
+(() => {
+  const video = document.getElementById("video");
+  const viewfinder = document.getElementById("viewfinder");
+  const placeholder = document.getElementById("placeholder");
+  const runBtn = document.getElementById("runBtn");
+  const statusMsg = document.getElementById("statusMsg");
+  const scoreBadge = document.getElementById("scoreBadge");
+
+  const playToneBtn = document.getElementById("playToneBtn");
+  const heardBtn = document.getElementById("heardBtn");
+  const micMeter = document.getElementById("micMeter");
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  function setRow(name, state, detail) {
+    const row = document.getElementById("row" + name);
+    const icon = document.getElementById("icon" + name);
+    const det = document.getElementById("detail" + name);
+    row.className = "check-row " + state;
+    det.textContent = detail;
+    if (state === "pass") icon.textContent = "✓";
+    else if (state === "fail") icon.textContent = "!";
+    else if (state === "running") icon.textContent = "…";
+  }
+
+  function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+  async function checkCamera() {
+    setRow("Camera", "running", "Starting camera…");
+    try {
+      const stream = await CamCheck.startCamera(video);
+      placeholder.style.display = "none";
+      viewfinder.classList.add("locked");
+      await sleep(500);
+      const light = CamCheck.estimateLightLevel(video);
+      const label = CamCheck.lightLabel(light);
+      if (label.cls === "pass") {
+        setRow("Camera", "pass", `Video OK · brightness ${light} (good)`);
+      } else {
+        setRow("Camera", "fail", `Video captured, but brightness looks off (${label.text})`);
+      }
+      return true;
+    } catch (err) {
+      setRow("Camera", "fail", "Can't access camera: " + (err.name || err.message));
+      return false;
+    }
+  }
+
+  async function checkMic() {
+    setRow("Mic", "running", "Starting microphone… say something for a few seconds");
+    try {
+      const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioCtx.createMediaStreamSource(micStream);
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 512;
+      source.connect(analyser);
+      const data = new Uint8Array(analyser.frequencyBinCount);
+
+      let peak = 0;
+      const start = performance.now();
+      await new Promise((resolve) => {
+        function sample() {
+          analyser.getByteTimeDomainData(data);
+          let sum = 0;
+          for (let i = 0; i < data.length; i += 1) {
+            const v = (data[i] - 128) / 128;
+            sum += v * v;
+          }
+          const rms = Math.sqrt(sum / data.length);
+          const pct = Math.min(100, Math.round(rms * 400));
+          peak = Math.max(peak, pct);
+          micMeter.style.width = pct + "%";
+          if (performance.now() - start < 3500) {
+            requestAnimationFrame(sample);
+          } else {
+            resolve();
+          }
+        }
+        sample();
+      });
+
+      micStream.getTracks().forEach((t) => t.stop());
+      audioCtx.close();
+
+      if (peak > 8) {
+        setRow("Mic", "pass", `Detected input (peak ${peak}%)`);
+      } else {
+        setRow("Mic", "fail", "Barely any response. Check your microphone settings.");
+      }
+      return true;
+    } catch (err) {
+      setRow("Mic", "fail", "Can't access microphone: " + (err.name || err.message));
+      return false;
+    }
+  }
+
+  function checkSpeaker() {
+    return new Promise((resolve) => {
+      setRow("Speaker", "running", "Play the test tone below, then click \"I heard it\" if you heard it");
+      playToneBtn.disabled = false;
+      heardBtn.disabled = false;
+
+      playToneBtn.onclick = () => {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = 440;
+        gain.gain.value = 0.15;
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start();
+        setTimeout(() => { osc.stop(); audioCtx.close(); }, 700);
+      };
+
+      heardBtn.onclick = () => {
+        setRow("Speaker", "pass", "Confirmed");
+        playToneBtn.disabled = true;
+        heardBtn.disabled = true;
+        resolve(true);
+      };
+    });
+  }
+
+  async function checkNetwork() {
+    setRow("Network", "running", "Downloading test file…");
+    try {
+      const url = "../assets/speedtest-2mb.bin?cachebust=" + Date.now();
+      const start = performance.now();
+      const res = await fetch(url, { cache: "no-store" });
+      const blob = await res.blob();
+      const elapsedSec = (performance.now() - start) / 1000;
+      const bits = blob.size * 8;
+      const mbps = (bits / elapsedSec / 1_000_000).toFixed(1);
+
+      if (mbps >= 3) {
+        setRow("Network", "pass", `~${mbps} Mbps (comfortable)`);
+      } else if (mbps >= 1.5) {
+        setRow("Network", "fail", `~${mbps} Mbps (a bit slow — lowering video quality may help)`);
+      } else {
+        setRow("Network", "fail", `~${mbps} Mbps (slow — consider joining audio-only)`);
+      }
+      return true;
+    } catch (err) {
+      setRow("Network", "fail", "Measurement failed: " + err.message);
+      return false;
+    }
+  }
+
+  runBtn.addEventListener("click", async () => {
+    runBtn.disabled = true;
+    scoreBadge.textContent = "Running…";
+    setStatus("Running tests in order…");
+
+    const camOk = await checkCamera();
+    const micOk = await checkMic();
+    await checkSpeaker();
+    const netOk = await checkNetwork();
+
+    const passCount = [camOk, micOk, netOk].filter(Boolean).length;
+    scoreBadge.textContent = `${passCount + 1} / 4 passed`;
+    setStatus("Check complete", "ok");
+    runBtn.disabled = false;
+    runBtn.textContent = "Check again";
+  });
+})();
+</script>
+
+<script src="../js/nav.js"></script>
+
+</body>
+</html>

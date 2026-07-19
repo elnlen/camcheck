@@ -1,58 +1,179 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://elnlen.github.io/camcheck/</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/" />
+  </url>
+  <url>
+    <loc>https://elnlen.github.io/camcheck/en/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/" />
   </url>
   <url>
     <loc>https://elnlen.github.io/camcheck/show-camera.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/show-camera.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/show-camera.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/show-camera.html" />
+  </url>
+  <url>
+    <loc>https://elnlen.github.io/camcheck/en/show-camera.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/show-camera.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/show-camera.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/show-camera.html" />
   </url>
   <url>
     <loc>https://elnlen.github.io/camcheck/photo-capture.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/photo-capture.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/photo-capture.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/photo-capture.html" />
+  </url>
+  <url>
+    <loc>https://elnlen.github.io/camcheck/en/photo-capture.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/photo-capture.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/photo-capture.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/photo-capture.html" />
   </url>
   <url>
     <loc>https://elnlen.github.io/camcheck/resolution-test.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/resolution-test.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/resolution-test.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/resolution-test.html" />
+  </url>
+  <url>
+    <loc>https://elnlen.github.io/camcheck/en/resolution-test.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/resolution-test.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/resolution-test.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/resolution-test.html" />
   </url>
   <url>
     <loc>https://elnlen.github.io/camcheck/call-readiness.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/call-readiness.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/call-readiness.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/call-readiness.html" />
+  </url>
+  <url>
+    <loc>https://elnlen.github.io/camcheck/en/call-readiness.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/call-readiness.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/call-readiness.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/call-readiness.html" />
   </url>
   <url>
     <loc>https://elnlen.github.io/camcheck/qr-scanner.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/qr-scanner.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/qr-scanner.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/qr-scanner.html" />
+  </url>
+  <url>
+    <loc>https://elnlen.github.io/camcheck/en/qr-scanner.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/qr-scanner.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/qr-scanner.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/qr-scanner.html" />
   </url>
   <url>
     <loc>https://elnlen.github.io/camcheck/green-screen.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/green-screen.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/green-screen.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/green-screen.html" />
+  </url>
+  <url>
+    <loc>https://elnlen.github.io/camcheck/en/green-screen.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/green-screen.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/green-screen.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/green-screen.html" />
   </url>
   <url>
     <loc>https://elnlen.github.io/camcheck/troubleshooting.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/troubleshooting.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/troubleshooting.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/troubleshooting.html" />
+  </url>
+  <url>
+    <loc>https://elnlen.github.io/camcheck/en/troubleshooting.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/troubleshooting.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/troubleshooting.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/troubleshooting.html" />
   </url>
   <url>
     <loc>https://elnlen.github.io/camcheck/about.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/about.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/about.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/about.html" />
+  </url>
+  <url>
+    <loc>https://elnlen.github.io/camcheck/en/about.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/about.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/about.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/about.html" />
   </url>
   <url>
     <loc>https://elnlen.github.io/camcheck/contact.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/contact.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/contact.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/contact.html" />
+  </url>
+  <url>
+    <loc>https://elnlen.github.io/camcheck/en/contact.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/contact.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/contact.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/contact.html" />
   </url>
   <url>
     <loc>https://elnlen.github.io/camcheck/sitemap.html</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-19</lastmod>
     <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/sitemap.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/sitemap.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/sitemap.html" />
+  </url>
+  <url>
+    <loc>https://elnlen.github.io/camcheck/en/sitemap.html</loc>
+    <lastmod>2026-07-19</lastmod>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/sitemap.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/sitemap.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/sitemap.html" />
   </url>
 </urlset>

@@ -1,37 +1,37 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>グリーンスクリーン・背景合成テスト — カメラでクロマキー確認 | CamCheck</title>
-<meta name="description" content="お手持ちのグリーンバック（またはブルーバック）とWebカメラで、リアルタイムのクロマキー合成をブラウザ上でテストできる無料ツール。" />
-<meta name="keywords" content="グリーンスクリーン テスト, クロマキー オンライン, カメラ 背景合成, バーチャル背景 確認" />
+<title>Green Screen / Virtual Background Test — Live Chroma Key | CamCheck</title>
+<meta name="description" content="Test real-time chroma key compositing right in your browser using your own green (or blue) screen backdrop and webcam — free." />
+<meta name="keywords" content="green screen test, chroma key online, camera background compositing, virtual background test" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
-<link rel="canonical" href="https://elnlen.github.io/camcheck/green-screen.html" />
+<link rel="canonical" href="https://elnlen.github.io/camcheck/en/green-screen.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/green-screen.html" />
 <link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/green-screen.html" />
 <link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/green-screen.html" />
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png" />
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="CamCheck" />
-<meta property="og:title" content="グリーンスクリーン・背景合成テスト — カメラでクロマキー確認 | CamCheck" />
-<meta property="og:description" content="お手持ちのグリーンバック（またはブルーバック）とWebカメラで、リアルタイムのクロマキー合成をブラウザ上でテストできる無料ツール。" />
-<meta property="og:url" content="https://elnlen.github.io/camcheck/green-screen.html" />
+<meta property="og:title" content="Green Screen / Virtual Background Test — Live Chroma Key | CamCheck" />
+<meta property="og:description" content="Test real-time chroma key compositing right in your browser using your own green (or blue) screen backdrop and webcam — free." />
+<meta property="og:url" content="https://elnlen.github.io/camcheck/en/green-screen.html" />
 <meta property="og:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:locale" content="ja_JP" />
-<meta property="og:locale:alternate" content="en_US" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="ja_JP" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="グリーンスクリーン・背景合成テスト — カメラでクロマキー確認 | CamCheck" />
-<meta name="twitter:description" content="お手持ちのグリーンバック（またはブルーバック）とWebカメラで、リアルタイムのクロマキー合成をブラウザ上でテストできる無料ツール。" />
+<meta name="twitter:title" content="Green Screen / Virtual Background Test — Live Chroma Key | CamCheck" />
+<meta name="twitter:description" content="Test real-time chroma key compositing right in your browser using your own green (or blue) screen backdrop and webcam — free." />
 <meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="../css/style.css" />
 <style>
   .gs-controls {
     display: grid;
@@ -80,26 +80,26 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "グリーンバックが無くてもAIで背景を消せますか？",
+      "name": "Can AI remove my background without a green screen?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "このツールは単色背景を透明にするクロマキー方式のため、無地の背景布がない状態でのAI的な人物抜き出しには対応していません。単色の壁やカーテンでも代用できる場合があります。"
+        "text": "This tool uses classic chroma key — it makes a chosen solid color transparent — rather than AI-based person segmentation, so it needs a plain backdrop. A solid-colored wall or curtain can sometimes stand in for one."
       }
     },
     {
       "@type": "Question",
-      "name": "合成した映像をビデオ通話にそのまま使えますか？",
+      "name": "Can I use the composited video directly in a video call?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "このページはブラウザ内でのテスト・確認用です。実際の通話アプリ（Zoom、OBSなど）にこの合成映像を仮想カメラとして送るには、別途OBSなどの配信ソフトと連携する必要があります。"
+        "text": "This page is for testing and previewing in your browser. To feed this composited output into a real call app (Zoom, etc.) as a virtual camera, you'd need to route it through separate broadcast software like OBS."
       }
     },
     {
       "@type": "Question",
-      "name": "「この瞬間を保存」で保存される画像に背景は写りますか？",
+      "name": "Does the background show up in the image saved by \"Save This Frame\"?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "背景モードが「透過」の場合は、抜いた部分が透明なPNGとして保存されます。「単色」「画像」の場合は、選んだ背景と合成された状態で保存されます。"
+        "text": "If the background mode is \"Transparent,\" the keyed-out area is saved as a transparent PNG. With \"Color\" or \"Image,\" it saves with your chosen background already composited in."
       }
     }
   ]
@@ -111,18 +111,18 @@
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
-    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="メニューを開く">
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">
       <span class="nav-toggle-bars"></span>
     </button>
-    <nav class="nav" id="siteNav" aria-label="ツールメニュー">
-      <a href="index.html">Webカメラテスト</a>
-      <a href="show-camera.html">カメラ情報</a>
-      <a href="photo-capture.html">写真撮影</a>
-      <a href="resolution-test.html">解像度テスト</a>
-      <a href="call-readiness.html">通話前チェック</a>
-      <a href="qr-scanner.html">QRスキャナー</a>
-      <a href="green-screen.html" aria-current="page">背景合成</a>
-      <a href="troubleshooting.html">トラブルシューティング</a>
+    <nav class="nav" id="siteNav" aria-label="Site tools">
+      <a href="index.html">Webcam Test</a>
+      <a href="show-camera.html">Camera Info</a>
+      <a href="photo-capture.html">Photo Capture</a>
+      <a href="resolution-test.html">Resolution Test</a>
+      <a href="call-readiness.html">Call Readiness</a>
+      <a href="qr-scanner.html">QR Scanner</a>
+      <a href="green-screen.html" aria-current="page">Green Screen</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
     </nav>
@@ -133,44 +133,44 @@
 
   <section class="hero">
     <div class="hero-kicker">● Chroma key</div>
-    <h1>グリーンスクリーン・背景合成テスト</h1>
-    <p class="lead">お手持ちのグリーンバック（またはブルーバック）を背景にカメラを起動すると、その色をリアルタイムで抜いて別の背景に合成します。AIによる人物認識ではなく、単色の背景を必要とする従来型のクロマキー方式です。光をきちんと当てれば、シンプルな構成でも自然な合成を実現できます。</p>
+    <h1>Green Screen / Virtual Background Test</h1>
+    <p class="lead">Start the camera with your own green (or blue) screen backdrop behind you, and that color gets keyed out and composited over a different background in real time. This is classic chroma key — it needs a solid-colored backdrop, not AI person detection. Light it properly and even a simple setup composites cleanly.</p>
 
     <div class="viewfinder" id="viewfinder">
       <video id="video" playsinline muted style="display:none;"></video>
       <canvas id="outCanvas" style="width:100%;height:100%;display:block;object-fit:cover;"></canvas>
-      <div class="vf-placeholder" id="placeholder">カメラはまだ開始していません<br />「カメラを開始」を押してください</div>
+      <div class="vf-placeholder" id="placeholder">Camera hasn't started yet<br />Click "Start Camera" below</div>
     </div>
 
     <div class="controls">
-      <button class="btn btn-primary" id="startBtn">カメラを開始</button>
-      <button class="btn btn-ghost" id="stopBtn" disabled>停止</button>
-      <button class="btn" id="saveBtn" disabled>この瞬間を保存</button>
+      <button class="btn btn-primary" id="startBtn">Start Camera</button>
+      <button class="btn btn-ghost" id="stopBtn" disabled>Stop</button>
+      <button class="btn" id="saveBtn" disabled>Save This Frame</button>
       <span class="status-msg" id="statusMsg"></span>
     </div>
 
     <div class="gs-controls">
       <div class="gs-field">
-        <label>抜く色（キーカラー）</label>
+        <label>Key color</label>
         <div class="swatch-row">
-          <button type="button" class="swatch active" data-color="#00ff00" style="background:#00ff00;" title="グリーン"></button>
-          <button type="button" class="swatch" data-color="#0000ff" style="background:#0000ff;" title="ブルー"></button>
-          <input type="color" id="customKeyColor" value="#00ff00" title="カスタム色" />
-          <button class="btn btn-ghost" id="pickFromVideoBtn" style="padding:6px 10px;font-size:0.68rem;">映像から取得</button>
+          <button type="button" class="swatch active" data-color="#00ff00" style="background:#00ff00;" title="Green"></button>
+          <button type="button" class="swatch" data-color="#0000ff" style="background:#0000ff;" title="Blue"></button>
+          <input type="color" id="customKeyColor" value="#00ff00" title="Custom color" />
+          <button class="btn btn-ghost" id="pickFromVideoBtn" style="padding:6px 10px;font-size:0.68rem;">Pick From Video</button>
         </div>
       </div>
 
       <div class="gs-field">
-        <label>抜く範囲（しきい値）: <span id="thresholdVal">70</span></label>
+        <label>Key range (threshold): <span id="thresholdVal">70</span></label>
         <input type="range" id="thresholdSlider" min="20" max="160" value="70" />
       </div>
 
       <div class="gs-field">
-        <label>背景</label>
+        <label>Background</label>
         <div class="bg-mode-row">
-          <button type="button" class="active" data-mode="checker" id="modeChecker">透過</button>
-          <button type="button" data-mode="color" id="modeColor">単色</button>
-          <button type="button" data-mode="image" id="modeImage">画像</button>
+          <button type="button" class="active" data-mode="checker" id="modeChecker">Transparent</button>
+          <button type="button" data-mode="color" id="modeColor">Color</button>
+          <button type="button" data-mode="image" id="modeImage">Image</button>
         </div>
         <div style="margin-top:10px;display:flex;gap:10px;align-items:center;">
           <input type="color" id="bgColorPicker" value="#1c1f24" />
@@ -182,39 +182,39 @@
 
 
   <section class="article">
-    <h2>使い方</h2>
+    <h2>How to use it</h2>
     <ol>
-      <li><strong>グリーンバック（またはブルーバック）を背景に設置する。</strong>シワや影が出ないよう、ピンと張るのが理想です。</li>
-      <li><strong>「カメラを開始」を押す。</strong>まずは通常の映像が表示されます。</li>
-      <li><strong>キーカラーを合わせる。</strong>プリセットのグリーン／ブルーで合わなければ「映像から取得」で実際の背景色をクリックして拾います。</li>
-      <li><strong>しきい値を調整する。</strong>背景が抜けきらない場合は数値を上げ、人物まで透けてしまう場合は下げます。</li>
-      <li><strong>背景を選ぶ。</strong>透過・単色・画像から選べます。</li>
+      <li><strong>Set up a green (or blue) screen behind you.</strong> Pull it taut to avoid wrinkles and shadows.</li>
+      <li><strong>Click "Start Camera."</strong> You'll first see the unprocessed video.</li>
+      <li><strong>Match the key color.</strong> If the preset green/blue doesn't match, use "Pick From Video" and click your actual backdrop color.</li>
+      <li><strong>Adjust the threshold.</strong> Raise it if the background isn't fully keyed out; lower it if parts of you start disappearing.</li>
+      <li><strong>Choose a background.</strong> Transparent, solid color, or an image.</li>
     </ol>
 
     <div class="callout">
-      これはAIによる自動人物切り抜きではなく、指定した色を透明にする従来型のクロマキー合成です。単色の背景布（グリーンバックやブルーバック）を使うほど、きれいに抜けます。
+      This isn't automatic AI person-cutout — it's classic chroma key that makes a chosen color transparent. The more uniform your backdrop color (an actual green or blue screen), the cleaner the key.
     </div>
 
-    <h2>きれいに抜けないときのコツ</h2>
+    <h2>Tips for a cleaner key</h2>
     <ul>
-      <li>背景布と人物との距離を1m以上あけ、色かぶり（グリーンスピル）を減らす。</li>
-      <li>背景布に均一に光を当て、影やムラをなくす。</li>
-      <li>抜きたい色に近い服（グリーンバックなら緑系の服）を避ける。</li>
-      <li>照明が不十分な場合は<a href="index.html">Webカメラテスト</a>で明るさを事前に確認する。</li>
+      <li>Keep at least a meter between you and the backdrop to reduce color spill.</li>
+      <li>Light the backdrop evenly to avoid shadows and hot spots.</li>
+      <li>Avoid wearing clothing close to the key color (no green shirts with a green screen).</li>
+      <li>If lighting is weak, check brightness ahead of time with the <a href="index.html">Webcam Test</a>.</li>
     </ul>
 
-    <h2>よくある質問</h2>
+    <h2>Frequently asked questions</h2>
     <div class="faq-item">
-      <h3>グリーンバックが無くてもAIで背景を消せますか？</h3>
-      <p>このツールは単色背景を透明にするクロマキー方式のため、無地の背景布がない状態でのAI的な人物抜き出しには対応していません。単色の壁やカーテンでも代用できる場合があります。</p>
+      <h3>Can AI remove my background without a green screen?</h3>
+      <p>This tool uses classic chroma key — it makes a chosen solid color transparent — rather than AI-based person segmentation, so it needs a plain backdrop. A solid-colored wall or curtain can sometimes stand in for one.</p>
     </div>
     <div class="faq-item">
-      <h3>合成した映像をビデオ通話にそのまま使えますか？</h3>
-      <p>このページはブラウザ内でのテスト・確認用です。実際の通話アプリ（Zoom、OBSなど）にこの合成映像を仮想カメラとして送るには、別途OBSなどの配信ソフトと連携する必要があります。</p>
+      <h3>Can I use the composited video directly in a video call?</h3>
+      <p>This page is for testing and previewing in your browser. To feed this composited output into a real call app (Zoom, etc.) as a virtual camera, you'd need to route it through separate broadcast software like OBS.</p>
     </div>
     <div class="faq-item">
-      <h3>「この瞬間を保存」で保存される画像に背景は写りますか？</h3>
-      <p>背景モードが「透過」の場合は、抜いた部分が透明なPNGとして保存されます。「単色」「画像」の場合は、選んだ背景と合成された状態で保存されます。</p>
+      <h3>Does the background show up in the image saved by "Save This Frame"?</h3>
+      <p>If the background mode is "Transparent," the keyed-out area is saved as a transparent PNG. With "Color" or "Image," it saves with your chosen background already composited in.</p>
     </div>
   </section>
 
@@ -225,38 +225,41 @@
     <div class="footer-grid">
       <div>
         <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
-        <p style="margin-top:14px;max-width:32ch;">ブラウザだけで完結する、無料のWebカメラ診断・撮影・スキャンツール集です。</p>
+        <p style="margin-top:14px;max-width:32ch;">A free set of webcam, photo, and diagnostic tools that run entirely in your browser.</p>
       </div>
       <div>
-        <h4>カメラツール</h4>
+        <h4>Camera tools</h4>
         <ul>
-          <li><a href="index.html">Webカメラテスト</a></li>
-          <li><a href="show-camera.html">カメラ情報</a></li>
-          <li><a href="photo-capture.html">写真撮影</a></li>
-          <li><a href="resolution-test.html">解像度テスト</a></li>
-          <li><a href="call-readiness.html">通話前チェック</a></li>
-          <li><a href="qr-scanner.html">QRスキャナー</a></li>
-          <li><a href="green-screen.html">背景合成テスト</a></li>
+          <li><a href="index.html">Webcam Test</a></li>
+          <li><a href="show-camera.html">Camera Info</a></li>
+          <li><a href="photo-capture.html">Photo Capture</a></li>
+          <li><a href="resolution-test.html">Resolution Test</a></li>
+          <li><a href="call-readiness.html">Call Readiness</a></li>
+          <li><a href="qr-scanner.html">QR Scanner</a></li>
+          <li><a href="green-screen.html">Green Screen Test</a></li>
         </ul>
       </div>
       <div>
-        <h4>サポート</h4>
+        <h4>Support</h4>
         <ul>
-          <li><a href="troubleshooting.html">トラブルシューティング</a></li>
+          <li><a href="troubleshooting.html">Troubleshooting</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
         </ul>
       </div>
       <div>
-        <h4>サイト</h4>
-        <ul><li><a href="sitemap.html">サイトマップ</a></li><li><a href="en/green-screen.html">English</a></li></ul>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="sitemap.html">Sitemap</a></li>
+          <li><a href="../green-screen.html">日本語</a></li>
+        </ul>
       </div>
     </div>
     <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
   </div>
 </footer>
 
-<script src="js/camera-utils.js"></script>
+<script src="../js/camera-utils.en.js"></script>
 <script>
 (() => {
   const video = document.getElementById("video");
@@ -380,7 +383,7 @@
   }
 
   startBtn.addEventListener("click", async () => {
-    setStatus("カメラを起動しています…");
+    setStatus("Starting camera…");
     startBtn.disabled = true;
     try {
       await CamCheck.startCamera(video);
@@ -389,11 +392,11 @@
       stopBtn.disabled = false;
       saveBtn.disabled = false;
       resizeCanvases();
-      setStatus("背景色に合わせてキーカラーを調整してください", "ok");
+      setStatus("Adjust the key color to match your background", "ok");
       rafId = requestAnimationFrame(processFrame);
     } catch (err) {
       startBtn.disabled = false;
-      setStatus(err.name === "NotAllowedError" ? "カメラへのアクセスが拒否されました。" : "エラー: " + err.message, "error");
+      setStatus(err.name === "NotAllowedError" ? "Camera access was denied." : "Error: " + err.message, "error");
     }
   });
 
@@ -405,7 +408,7 @@
     startBtn.disabled = false;
     stopBtn.disabled = true;
     saveBtn.disabled = true;
-    setStatus("停止しました");
+    setStatus("Stopped");
   });
 
   saveBtn.addEventListener("click", () => {
@@ -436,7 +439,7 @@
 
   pickFromVideoBtn.addEventListener("click", () => {
     pickingColor = true;
-    setStatus("映像内の抜きたい部分をクリックしてください", "ok");
+    setStatus("Click the part of the video you want to key out", "ok");
   });
 
   canvas.addEventListener("click", (e) => {
@@ -450,7 +453,7 @@
     customKeyColor.value = hex;
     document.querySelectorAll(".swatch[data-color]").forEach((b) => b.classList.remove("active"));
     pickingColor = false;
-    setStatus("キーカラーを更新しました", "ok");
+    setStatus("Key color updated", "ok");
   });
 
   [["modeChecker", "checker"], ["modeColor", "color"], ["modeImage", "image"]].forEach(([id, mode]) => {
@@ -473,7 +476,7 @@
 })();
 </script>
 
-<script src="js/nav.js"></script>
+<script src="../js/nav.js"></script>
 
 </body>
 </html>

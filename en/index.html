@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CamCheck — Free Online Webcam Test</title>
+<meta name="description" content="Test your webcam right in your browser. Check resolution, frame rate, and brightness instantly — free, no install required." />
+<meta name="keywords" content="webcam test, camera test online, check camera working, resolution test, camera not working" />
+<meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
+<link rel="canonical" href="https://elnlen.github.io/camcheck/en/" />
+<link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/" />
+<link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/" />
+<link rel="alternate" hreflang="x-default" href="https://elnlen.github.io/camcheck/" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png" />
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="CamCheck" />
+<meta property="og:title" content="CamCheck — Free Online Webcam Test" />
+<meta property="og:description" content="Test your webcam right in your browser. Check resolution, frame rate, and brightness instantly — free, no install required." />
+<meta property="og:url" content="https://elnlen.github.io/camcheck/en/" />
+<meta property="og:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="ja_JP" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="CamCheck — Free Online Webcam Test" />
+<meta name="twitter:description" content="Test your webcam right in your browser. Check resolution, frame rate, and brightness instantly — free, no install required." />
+<meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is my camera footage saved or sent anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. This tool uses the browser's getUserMedia API and does all processing on your device. Video or photos are never uploaded to a server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "I clicked \"Start Camera\" but nothing shows up",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In most cases, either you (or someone) previously blocked camera access in the browser's permission dialog, or another app (Zoom, Teams, OBS, etc.) is already using the camera. See the troubleshooting guide for details."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to install anything or sign up?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Just open this page — it works immediately in any modern browser with no extra software."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this work on smartphones?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, it works on major mobile browsers like iOS Safari and Android Chrome. Some devices don't support switching between front and rear cameras — check the compatibility table below for details."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">
+      <span class="nav-toggle-bars"></span>
+    </button>
+    <nav class="nav" id="siteNav" aria-label="Site tools">
+      <a href="index.html" aria-current="page">Webcam Test</a>
+      <a href="show-camera.html">Camera Info</a>
+      <a href="photo-capture.html">Photo Capture</a>
+      <a href="resolution-test.html">Resolution Test</a>
+      <a href="call-readiness.html">Call Readiness</a>
+      <a href="qr-scanner.html">QR Scanner</a>
+      <a href="green-screen.html">Green Screen</a>
+      <a href="troubleshooting.html">Troubleshooting</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="hero-kicker">● Live diagnostics</div>
+    <h1>Webcam Test — Check It Right Now, In Your Browser</h1>
+    <p class="lead">Click "Start Camera" and your browser will ask permission to access it. Once granted, you'll see resolution, frame rate, and brightness measured in real time. Running this before a meeting or interview makes it easy to catch a black screen, a too-dark picture, or choppy video before anyone else sees it. Nothing leaves your device — all processing happens locally.</p>
+
+    <div class="viewfinder" id="viewfinder">
+      <video id="video" playsinline muted></video>
+      <canvas class="grid-overlay" id="gridOverlay"></canvas>
+      <div class="vf-placeholder" id="placeholder">Camera hasn't started yet<br />Click "Start Camera" below</div>
+
+      <span class="af-bracket tl"></span>
+      <span class="af-bracket tr"></span>
+      <span class="af-bracket bl"></span>
+      <span class="af-bracket br"></span>
+
+      <div class="hud-top">
+        <span id="hudDevice">—</span>
+        <span id="hudRes">—</span>
+      </div>
+      <div class="hud">
+        <span class="rec"><span class="blip"></span>LIVE</span>
+        <span id="hudFps">FPS —</span>
+        <span id="hudLight">LIGHT —</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="startBtn">Start Camera</button>
+      <button class="btn" id="gridBtn" disabled>Show Grid</button>
+      <button class="btn btn-ghost" id="stopBtn" disabled>Stop</button>
+      <span class="status-msg" id="statusMsg"></span>
+    </div>
+
+    <div class="spec-sheet">
+      <div class="spec-sheet-head">
+        <span>Camera Readout</span>
+        <span id="specTimestamp">—</span>
+      </div>
+      <div class="spec-grid">
+        <div class="spec-item">
+          <div class="k">Device name</div>
+          <div class="v" id="sDevice">—</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">Resolution</div>
+          <div class="v" id="sRes">—</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">Frame rate</div>
+          <div class="v" id="sFps">—</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">Brightness</div>
+          <div class="v" id="sLight">—</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">Aspect ratio</div>
+          <div class="v" id="sAspect">—</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">Facing mode</div>
+          <div class="v" id="sFacing">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="article">
+    <h2>How to use the webcam test</h2>
+    <ol>
+      <li><strong>Click "Start Camera."</strong> Your browser will prompt for camera access.</li>
+      <li><strong>Choose "Allow."</strong> Video appears in the viewfinder and the four corner brackets turn green.</li>
+      <li><strong>Check the readout.</strong> Resolution, frame rate, and brightness update live.</li>
+      <li><strong>Turn on the grid if you need it.</strong> "Show Grid" overlays rule-of-thirds lines for framing.</li>
+    </ol>
+
+    <div class="callout">
+      Video and audio are never sent to a server. Everything is processed inside your browser on this device, and it's discarded the moment you close the page.
+    </div>
+
+    <h2>How to read each metric</h2>
+    <h3>Resolution</h3>
+    <p>The actual pixel count your camera is streaming. 720p (1280×720) or higher is plenty for a video call; 1080p (1920×1080) gives you room for recording or streaming too. If the number comes in surprisingly low, suspect another app hogging the camera or a USB bandwidth bottleneck.</p>
+
+    <h3>Frame rate (FPS)</h3>
+    <p>How many frames per second your camera is delivering. 24fps and up looks smooth; below 15fps, motion starts to look choppy. In low light, cameras often drop their frame rate automatically to gather more light per frame.</p>
+
+    <h3>Brightness</h3>
+    <p>An estimate of average luminance on a 0–255 scale. Under 40 is too dark to see clearly; over 230 means you're blown out. Aim for 80–200 by adjusting your desk lamp or window position. Watch out for backlighting — a window behind you can leave your face dark even when the overall brightness number looks fine. If the number looks good but the picture still looks off, check where your light source is first.</p>
+
+    <h2>Frequently asked questions</h2>
+
+    <div class="faq-item">
+      <h3>Is my camera footage saved or sent anywhere?</h3>
+      <p>No. This tool uses the browser's getUserMedia API and does all processing on your device. Video or photos are never uploaded to a server.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>I clicked "Start Camera" but nothing shows up</h3>
+      <p>In most cases, either camera access was previously blocked in the browser's permission dialog, or another app (Zoom, Teams, OBS, etc.) already has the camera open. See the <a href="troubleshooting.html">troubleshooting guide</a> for step-by-step fixes.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Do I need to install anything or sign up?</h3>
+      <p>No. Just open this page — it works immediately in any modern browser with no extra software.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Does this work on smartphones?</h3>
+      <p>Yes, it works on major mobile browsers like iOS Safari and Android Chrome. Some devices don't support switching between front and rear cameras — see the compatibility table below.</p>
+    </div>
+
+    <h2>Compatibility</h2>
+    <table class="compat">
+      <thead>
+        <tr><th>Platform</th><th>Supported browsers</th><th>Minimum version (approx.)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Windows</td><td>Chrome / Edge / Firefox</td><td>Chrome 53 · Edge 79 · Firefox 36</td></tr>
+        <tr><td>macOS</td><td>Chrome / Safari / Firefox</td><td>Safari 11 · Chrome 53 · Firefox 36</td></tr>
+        <tr><td>Android</td><td>Chrome / Firefox / Samsung Internet</td><td>Chrome 53 · Firefox 36</td></tr>
+        <tr><td>iOS / iPadOS</td><td>Safari</td><td>Safari 11+ (other browsers run on Safari's engine too)</td></tr>
+      </tbody>
+    </table>
+
+    <p>Related tools: for detailed device info, try <a href="show-camera.html">Camera Info</a>. To save a still photo, try <a href="photo-capture.html">Photo Capture</a>. To compare what each resolution actually delivers, try the <a href="resolution-test.html">Resolution Test</a>.</p>
+  </section>
+
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><span class="dot"></span>CamCheck</a>
+        <p style="margin-top:14px;max-width:32ch;">A free set of webcam, photo, and diagnostic tools that run entirely in your browser.</p>
+      </div>
+      <div>
+        <h4>Camera tools</h4>
+        <ul>
+          <li><a href="index.html">Webcam Test</a></li>
+          <li><a href="show-camera.html">Camera Info</a></li>
+          <li><a href="photo-capture.html">Photo Capture</a></li>
+          <li><a href="resolution-test.html">Resolution Test</a></li>
+          <li><a href="call-readiness.html">Call Readiness</a></li>
+          <li><a href="qr-scanner.html">QR Scanner</a></li>
+          <li><a href="green-screen.html">Green Screen Test</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="troubleshooting.html">Troubleshooting</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="sitemap.html">Sitemap</a></li>
+          <li><a href="../index.html">日本語</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom wrap" style="padding-left:0;padding-right:0;">© 2026 CamCheck. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="../js/camera-utils.en.js"></script>
+<script>
+(() => {
+  const video = document.getElementById("video");
+  const viewfinder = document.getElementById("viewfinder");
+  const placeholder = document.getElementById("placeholder");
+  const gridOverlay = document.getElementById("gridOverlay");
+  const startBtn = document.getElementById("startBtn");
+  const stopBtn = document.getElementById("stopBtn");
+  const gridBtn = document.getElementById("gridBtn");
+  const statusMsg = document.getElementById("statusMsg");
+
+  const hudDevice = document.getElementById("hudDevice");
+  const hudRes = document.getElementById("hudRes");
+  const hudFps = document.getElementById("hudFps");
+  const hudLight = document.getElementById("hudLight");
+
+  const sDevice = document.getElementById("sDevice");
+  const sRes = document.getElementById("sRes");
+  const sFps = document.getElementById("sFps");
+  const sLight = document.getElementById("sLight");
+  const sAspect = document.getElementById("sAspect");
+  const sFacing = document.getElementById("sFacing");
+  const specTimestamp = document.getElementById("specTimestamp");
+
+  let statsTimer = null;
+
+  function setStatus(text, cls) {
+    statusMsg.textContent = text;
+    statusMsg.className = "status-msg" + (cls ? " " + cls : "");
+  }
+
+  async function updateStats(stream) {
+    const settings = CamCheck.readTrackSettings(stream);
+    if (!settings) return;
+
+    const fps = await CamCheck.measureFrameRate(video, 1000);
+    const light = CamCheck.estimateLightLevel(video);
+
+    const resInfo = CamCheck.resLabel(settings.width, settings.height);
+    const fpsInfo = CamCheck.fpsLabel(fps);
+    const lightInfo = CamCheck.lightLabel(light);
+
+    hudDevice.textContent = settings.label.slice(0, 28);
+    hudRes.textContent = settings.width ? `${settings.width}×${settings.height}` : "—";
+    hudFps.textContent = fps ? `${fps} FPS` : "FPS —";
+    hudLight.textContent = light !== null ? `LIGHT ${light}` : "LIGHT —";
+
+    sDevice.textContent = settings.label;
+    sRes.textContent = resInfo.text; sRes.className = "v " + resInfo.cls;
+    sFps.textContent = fpsInfo.text; sFps.className = "v " + fpsInfo.cls;
+    sLight.textContent = lightInfo.text; sLight.className = "v " + lightInfo.cls;
+    sAspect.textContent = settings.aspectRatio ? settings.aspectRatio.toFixed(2) : (settings.width && settings.height ? (settings.width/settings.height).toFixed(2) : "—");
+    sFacing.textContent = settings.facingMode || "Desktop / unknown";
+    specTimestamp.textContent = new Date().toLocaleTimeString("en-US");
+  }
+
+  startBtn.addEventListener("click", async () => {
+    setStatus("Starting camera…");
+    startBtn.disabled = true;
+    try {
+      const stream = await CamCheck.startCamera(video);
+      placeholder.style.display = "none";
+      viewfinder.classList.add("locked");
+      stopBtn.disabled = false;
+      gridBtn.disabled = false;
+      setStatus("Camera is working", "ok");
+
+      await updateStats(stream);
+      statsTimer = setInterval(() => updateStats(stream), 2500);
+    } catch (err) {
+      startBtn.disabled = false;
+      if (err.name === "NotAllowedError") {
+        setStatus("Camera access was denied. Check your browser's permission settings.", "error");
+      } else if (err.name === "NotFoundError") {
+        setStatus("No camera found. Check the connection.", "error");
+      } else {
+        setStatus("Error: " + err.message, "error");
+      }
+    }
+  });
+
+  stopBtn.addEventListener("click", () => {
+    CamCheck.stopCamera();
+    clearInterval(statsTimer);
+    viewfinder.classList.remove("locked");
+    placeholder.style.display = "block";
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    gridBtn.disabled = true;
+    setStatus("Camera stopped");
+  });
+
+  gridBtn.addEventListener("click", () => {
+    viewfinder.classList.toggle("show-grid");
+    if (viewfinder.classList.contains("show-grid")) {
+      CamCheck.drawThirdsGrid(gridOverlay);
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (viewfinder.classList.contains("show-grid")) {
+      CamCheck.drawThirdsGrid(gridOverlay);
+    }
+  });
+})();
+</script>
+
+<script src="../js/nav.js"></script>
+
+</body>
+</html>
