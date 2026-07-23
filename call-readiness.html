@@ -7,14 +7,6 @@
 <meta name="description" content="Zoom・Teams・Google Meetなどのビデオ通話前に、カメラ・マイク・スピーカー・回線速度をまとめてチェックできる無料ツール。" />
 <meta name="keywords" content="ビデオ通話 事前チェック, zoom カメラ テスト, teams マイク テスト, 通話 前 確認" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
-<script>
-(function(){
-  var c = null;
-  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
-  window.adsbygoogle = window.adsbygoogle || [];
-  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
-})();
-</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/call-readiness.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/call-readiness.html" />
@@ -120,6 +112,7 @@
       <a href="troubleshooting.html">トラブルシューティング</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
+      <a href="privacy.html">プライバシーポリシー</a>
     </nav>
   </div>
 </header>
@@ -265,17 +258,9 @@
         <ul><li><a href="sitemap.html">サイトマップ</a></li><li><a href="en/call-readiness.html">English</a></li></ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie設定</button></div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
   </div>
 </footer>
-
-<div class="consent-banner" id="consentBanner">
-  <p>このサイトでは、広告配信のためにCookie等を使用しています。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
-  <div class="consent-actions">
-    <button class="btn btn-primary" id="consentAcceptBtn">同意する</button>
-    <button class="btn btn-ghost" id="consentDeclineBtn">パーソナライズ広告を拒否</button>
-  </div>
-</div>
 
 
 <script src="js/camera-utils.js"></script>
@@ -478,7 +463,6 @@
 </script>
 
 <script src="js/nav.js"></script>
-<script src="js/consent.js"></script>
 
 </body>
 </html>

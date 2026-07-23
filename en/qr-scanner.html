@@ -7,14 +7,6 @@
 <meta name="description" content="Scan QR codes on the spot using your browser's camera. No app install — decoded URLs and text are processed only on this device." />
 <meta name="keywords" content="QR code scanner, scan QR code online, browser camera QR code" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
-<script>
-(function(){
-  var c = null;
-  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
-  window.adsbygoogle = window.adsbygoogle || [];
-  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
-})();
-</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/en/qr-scanner.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/qr-scanner.html" />
@@ -94,6 +86,7 @@
       <a href="troubleshooting.html">Troubleshooting</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy Policy</a>
     </nav>
   </div>
 </header>
@@ -214,17 +207,9 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie Settings</button></div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
   </div>
 </footer>
-
-<div class="consent-banner" id="consentBanner">
-  <p>This site uses cookies for ad delivery. See the <a href="privacy.html">Privacy Policy</a> for details.</p>
-  <div class="consent-actions">
-    <button class="btn btn-primary" id="consentAcceptBtn">Accept</button>
-    <button class="btn btn-ghost" id="consentDeclineBtn">Decline Personalized Ads</button>
-  </div>
-</div>
 
 
 <script defer src="../js/vendor/jsQR.js"></script>
@@ -395,7 +380,6 @@
 </script>
 
 <script src="../js/nav.js"></script>
-<script src="../js/consent.js"></script>
 
 </body>
 </html>

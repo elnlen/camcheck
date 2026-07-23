@@ -6,14 +6,6 @@
 <title>プライバシーポリシー | CamCheck</title>
 <meta name="description" content="CamCheckにおけるデータの扱い、Cookie、広告配信に関するプライバシーポリシーです。" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
-<script>
-(function(){
-  var c = null;
-  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
-  window.adsbygoogle = window.adsbygoogle || [];
-  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
-})();
-</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/privacy.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/privacy.html" />
@@ -61,6 +53,7 @@
       <a href="troubleshooting.html">トラブルシューティング</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
+      <a href="privacy.html" aria-current="page">プライバシーポリシー</a>
     </nav>
   </div>
 </header>
@@ -85,7 +78,8 @@
     </ul>
 
     <h2>Cookieの同意について</h2>
-    <p>初回訪問時に画面下部に表示されるバナーで、パーソナライズ広告への同意可否を選択できます。「同意する」を選ぶまでは、非パーソナライズ広告（Cookieに基づく興味関心ターゲティングを行わない広告）のみが配信されます。選択はこの端末のブラウザに保存され、後から変更したい場合はページ下部の「Cookie設定」リンクからいつでも選び直せます。</p>
+    <p>欧州経済領域（EEA）・英国・スイスからのアクセス、およびカリフォルニア州など一部の米国の州からのアクセスについては、Google AdSenseの同意管理の仕組み（Googleの「プライバシーとメッセージ」機能）を通じて、法令に応じた同意・オプトアウトの選択肢が表示されます。それ以外の地域では、この仕組みによる追加のバナー表示は行っていません。</p>
+    <p>パーソナライズ広告の設定はいつでも<a href="https://adssettings.google.com/" target="_blank" rel="noopener">Google広告設定</a>から変更できます。</p>
 
     <div class="callout">
       非パーソナライズ広告であっても、広告の表示・不正防止・頻度制御のための最小限のCookieは使用される場合があります。完全にCookieを避けたい場合は、ブラウザ側でサードパーティCookieをブロックする設定をご利用ください。
@@ -93,9 +87,6 @@
 
     <h2>アクセス解析について</h2>
     <p>現時点で、Google Analyticsなどの独立したアクセス解析ツールは導入していません。AdSense自体が広告配信の一環として集計データを取得する場合があります。</p>
-
-    <h2>Cookie以外の保存データ</h2>
-    <p>広告同意の選択（パーソナライズ広告に同意したかどうか）は、この端末のブラウザの<code>localStorage</code>に保存されます。これは外部に送信されず、ブラウザのデータを消去すると削除されます。</p>
 
     <h2>お子様のプライバシーについて</h2>
     <p>このサイトは特に子供を対象としたものではなく、対象年齢を限定した設計もしていません。年少者の個人情報を意図的に収集することはありません。</p>
@@ -142,20 +133,11 @@
         <ul><li><a href="sitemap.html">サイトマップ</a></li><li><a href="en/privacy.html">English</a></li></ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie設定</button></div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
   </div>
 </footer>
 
-<div class="consent-banner" id="consentBanner">
-  <p>このサイトでは、広告配信のためにCookie等を使用しています。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
-  <div class="consent-actions">
-    <button class="btn btn-primary" id="consentAcceptBtn">同意する</button>
-    <button class="btn btn-ghost" id="consentDeclineBtn">パーソナライズ広告を拒否</button>
-  </div>
-</div>
-
 <script src="js/nav.js"></script>
-<script src="js/consent.js"></script>
 
 </body>
 </html>

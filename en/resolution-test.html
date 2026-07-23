@@ -7,14 +7,6 @@
 <meta name="description" content="Requests 720p, 1080p, 4K and more in sequence from the browser to show what resolution your webcam actually delivers — free." />
 <meta name="keywords" content="webcam resolution test, check camera 1080p, camera quality diagnostic" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
-<script>
-(function(){
-  var c = null;
-  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
-  window.adsbygoogle = window.adsbygoogle || [];
-  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
-})();
-</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/en/resolution-test.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/resolution-test.html" />
@@ -86,6 +78,7 @@
       <a href="troubleshooting.html">Troubleshooting</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy Policy</a>
     </nav>
   </div>
 </header>
@@ -185,17 +178,9 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie Settings</button></div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
   </div>
 </footer>
-
-<div class="consent-banner" id="consentBanner">
-  <p>This site uses cookies for ad delivery. See the <a href="privacy.html">Privacy Policy</a> for details.</p>
-  <div class="consent-actions">
-    <button class="btn btn-primary" id="consentAcceptBtn">Accept</button>
-    <button class="btn btn-ghost" id="consentDeclineBtn">Decline Personalized Ads</button>
-  </div>
-</div>
 
 
 <script src="../js/camera-utils.en.js"></script>
@@ -283,7 +268,6 @@
 </script>
 
 <script src="../js/nav.js"></script>
-<script src="../js/consent.js"></script>
 
 </body>
 </html>

@@ -6,14 +6,6 @@
 <title>Privacy Policy | CamCheck</title>
 <meta name="description" content="How CamCheck handles data, cookies, and ad delivery." />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
-<script>
-(function(){
-  var c = null;
-  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
-  window.adsbygoogle = window.adsbygoogle || [];
-  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
-})();
-</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/en/privacy.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/privacy.html" />
@@ -61,6 +53,7 @@
       <a href="troubleshooting.html">Troubleshooting</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
+      <a href="privacy.html" aria-current="page">Privacy Policy</a>
     </nav>
   </div>
 </header>
@@ -85,7 +78,8 @@
     </ul>
 
     <h2>Cookie consent</h2>
-    <p>On your first visit, a banner at the bottom of the page lets you choose whether to allow personalized ads. Until you click "Accept," only non-personalized ads (no interest-based targeting from cookies) are shown. Your choice is saved in this browser and can be changed anytime via the "Cookie Settings" link at the bottom of the page.</p>
+    <p>For visitors in the European Economic Area (EEA), the UK, and Switzerland, and for visitors in certain US states (such as California), Google AdSense's consent management tool ("Privacy & messaging") shows a consent or opt-out message as required by local law. Visitors elsewhere won't see an additional banner from this mechanism.</p>
+    <p>You can change your personalized ad settings anytime via <a href="https://adssettings.google.com/" target="_blank" rel="noopener">Google Ad Settings</a>.</p>
 
     <div class="callout">
       Even with non-personalized ads, a minimal set of cookies may still be used for ad serving, fraud prevention, and frequency capping. If you'd rather avoid cookies entirely, block third-party cookies in your browser settings.
@@ -93,9 +87,6 @@
 
     <h2>Analytics</h2>
     <p>No separate analytics tool (like Google Analytics) is installed on this site at this time. AdSense itself may collect aggregate data as part of ad delivery.</p>
-
-    <h2>Data stored outside cookies</h2>
-    <p>Your ad-consent choice (whether you accepted personalized ads) is stored in this browser's <code>localStorage</code>. It's never transmitted anywhere and is removed if you clear your browser data.</p>
 
     <h2>Children's privacy</h2>
     <p>This site isn't directed at children and isn't designed for any specific age group. It does not knowingly collect personal information from minors.</p>
@@ -145,20 +136,11 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie Settings</button></div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
   </div>
 </footer>
 
-<div class="consent-banner" id="consentBanner">
-  <p>This site uses cookies for ad delivery. See the <a href="privacy.html">Privacy Policy</a> for details.</p>
-  <div class="consent-actions">
-    <button class="btn btn-primary" id="consentAcceptBtn">Accept</button>
-    <button class="btn btn-ghost" id="consentDeclineBtn">Decline Personalized Ads</button>
-  </div>
-</div>
-
 <script src="../js/nav.js"></script>
-<script src="../js/consent.js"></script>
 
 </body>
 </html>
