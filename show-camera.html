@@ -7,6 +7,15 @@
 <meta name="description" content="今使えるWebカメラを一覧表示し、解像度上限・フレームレート上限などの詳細スペックを確認できる無料ツール。" />
 <meta name="keywords" content="カメラ デバイス名 確認, webカメラ スペック, カメラ 一覧 表示" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<script>
+(function(){
+  var c = null;
+  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
+  window.adsbygoogle = window.adsbygoogle || [];
+  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/show-camera.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/show-camera.html" />
 <link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/show-camera.html" />
@@ -30,6 +39,7 @@
 <meta name="twitter:description" content="今使えるWebカメラを一覧表示し、解像度上限・フレームレート上限などの詳細スペックを確認できる無料ツール。" />
 <meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
 <script type="application/ld+json">
@@ -103,6 +113,7 @@
       <li><strong>最大解像度</strong> — カメラが理論上出力できるもっとも高い解像度。実際の配信解像度はアプリ側の設定に依存します。</li>
       <li><strong>最大フレームレート</strong> — 1秒あたりに出力できる最大コマ数。値が高いほど滑らかな映像になります。</li>
       <li><strong>ズーム／フォーカス対応</strong> — ブラウザ経由で制御できる機能があるかどうか。</li>
+      <li><strong>プレビュー</strong> — 各カメラの「このカメラをプレビュー」ボタンで、実際の映像を個別に確認できます。内蔵カメラと外付けカメラ、どちらが今映っているのか分からなくなったときに便利です。</li>
     </ul>
 
     <div class="callout">
@@ -150,6 +161,7 @@
           <li><a href="troubleshooting.html">トラブルシューティング</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">プライバシーポリシー</a></li>
         </ul>
       </div>
       <div>
@@ -157,9 +169,18 @@
         <ul><li><a href="sitemap.html">サイトマップ</a></li><li><a href="en/show-camera.html">English</a></li></ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie設定</button></div>
   </div>
 </footer>
+
+<div class="consent-banner" id="consentBanner">
+  <p>このサイトでは、広告配信のためにCookie等を使用しています。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+  <div class="consent-actions">
+    <button class="btn btn-primary" id="consentAcceptBtn">同意する</button>
+    <button class="btn btn-ghost" id="consentDeclineBtn">パーソナライズ広告を拒否</button>
+  </div>
+</div>
+
 
 <script src="js/camera-utils.js"></script>
 <script>
@@ -173,7 +194,7 @@
     statusMsg.className = "status-msg" + (cls ? " " + cls : "");
   }
 
-  function renderCard(dev, settings) {
+  function renderCard(dev, settings, index) {
     const caps = settings ? settings.capabilities : {};
     const maxW = caps && caps.width ? caps.width.max : null;
     const maxH = caps && caps.height ? caps.height.max : null;
@@ -188,11 +209,64 @@
         <div class="spec-item"><div class="k">最大フレームレート</div><div class="v ${maxFps ? "pass" : ""}">${maxFps ? maxFps + " fps" : "不明"}</div></div>
         <div class="spec-item"><div class="k">ズーム対応</div><div class="v">${caps && caps.zoom ? "対応" : "非対応 / 不明"}</div></div>
         <div class="spec-item"><div class="k">向き</div><div class="v">${settings && settings.facingMode ? settings.facingMode : "デスクトップ / 不明"}</div></div>
+      </div>
+      <div style="padding:14px 18px;border-top:1px solid var(--line);">
+        <button class="btn btn-ghost" type="button" data-preview-btn data-device-id="${dev.deviceId}" style="font-size:0.72rem;padding:9px 16px;">このカメラをプレビュー</button>
+        <div class="viewfinder" data-preview-box style="display:none;margin-top:12px;aspect-ratio:16/9;">
+          <video data-preview-video playsinline muted></video>
+        </div>
       </div>`;
     return div;
   }
 
+  let previewStream = null;
+  let activePreviewBtn = null;
+
+  function stopPreview() {
+    if (previewStream) {
+      previewStream.getTracks().forEach((t) => t.stop());
+      previewStream = null;
+    }
+    if (activePreviewBtn) {
+      const box = activePreviewBtn.closest(".spec-sheet").querySelector("[data-preview-box]");
+      box.style.display = "none";
+      activePreviewBtn.textContent = "このカメラをプレビュー";
+      activePreviewBtn = null;
+    }
+  }
+
+  deviceList.addEventListener("click", async (e) => {
+    const btn = e.target.closest("[data-preview-btn]");
+    if (!btn) return;
+
+    const wasActive = btn === activePreviewBtn;
+    stopPreview();
+    if (wasActive) return; // clicking the already-open preview just closes it
+
+    const card = btn.closest(".spec-sheet");
+    const box = card.querySelector("[data-preview-box]");
+    const videoEl = card.querySelector("[data-preview-video]");
+    const deviceId = btn.dataset.deviceId;
+
+    btn.textContent = "起動しています…";
+    try {
+      previewStream = await navigator.mediaDevices.getUserMedia({
+        video: deviceId ? { deviceId: { exact: deviceId } } : true,
+        audio: false,
+      });
+      videoEl.srcObject = previewStream;
+      await videoEl.play().catch(() => {});
+      box.style.display = "flex";
+      btn.textContent = "プレビューを閉じる";
+      activePreviewBtn = btn;
+    } catch (err) {
+      btn.textContent = "このカメラをプレビュー";
+      setStatus("プレビューできませんでした: " + (err.name || err.message), "error");
+    }
+  });
+
   scanBtn.addEventListener("click", async () => {
+    stopPreview();
     setStatus("スキャン中…");
     deviceList.innerHTML = "";
     try {
@@ -210,7 +284,7 @@
 
       devices.forEach((dev, i) => {
         const settings = i === 0 ? activeSettings : null;
-        deviceList.appendChild(renderCard(dev, settings));
+        deviceList.appendChild(renderCard(dev, settings, i));
       });
 
       tempStream.getTracks().forEach((t) => t.stop());
@@ -226,6 +300,7 @@
 </script>
 
 <script src="js/nav.js"></script>
+<script src="js/consent.js"></script>
 
 </body>
 </html>

@@ -34,6 +34,44 @@ const CamCheck = (() => {
     return devices.filter((d) => d.kind === "videoinput");
   }
 
+  /** List every audio input (microphone) device the browser can see. */
+  async function listMics() {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    return devices.filter((d) => d.kind === "audioinput");
+  }
+
+  /**
+   * Fill a <select> with the available cameras and return the device list.
+   * Device labels are only meaningful after permission has been granted at
+   * least once — before that, browsers hand back generic "camera 1" labels.
+   */
+  async function populateDeviceSelect(selectEl, currentDeviceId) {
+    const devices = await listCameras();
+    selectEl.innerHTML = "";
+    devices.forEach((d, i) => {
+      const opt = document.createElement("option");
+      opt.value = d.deviceId;
+      opt.textContent = d.label || `Camera ${i + 1}`;
+      if (d.deviceId === currentDeviceId) opt.selected = true;
+      selectEl.appendChild(opt);
+    });
+    return devices;
+  }
+
+  /** Same idea as populateDeviceSelect, but for microphones. */
+  async function populateMicSelect(selectEl, currentDeviceId) {
+    const devices = await listMics();
+    selectEl.innerHTML = "";
+    devices.forEach((d, i) => {
+      const opt = document.createElement("option");
+      opt.value = d.deviceId;
+      opt.textContent = d.label || `Mic ${i + 1}`;
+      if (d.deviceId === currentDeviceId) opt.selected = true;
+      selectEl.appendChild(opt);
+    });
+    return devices;
+  }
+
   /** Read the live settings (resolution, frame rate, facing mode) off a track. */
   function readTrackSettings(stream) {
     const track = stream.getVideoTracks()[0];
@@ -170,6 +208,9 @@ const CamCheck = (() => {
     startCamera,
     stopCamera,
     listCameras,
+    listMics,
+    populateDeviceSelect,
+    populateMicSelect,
     readTrackSettings,
     measureFrameRate,
     estimateLightLevel,

@@ -7,6 +7,15 @@
 <meta name="description" content="Before a Zoom, Teams, or Google Meet call, check your camera, mic, speakers, and connection speed all at once — free." />
 <meta name="keywords" content="video call pre-check, zoom camera test, teams mic test, check before call" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<script>
+(function(){
+  var c = null;
+  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
+  window.adsbygoogle = window.adsbygoogle || [];
+  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/en/call-readiness.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/call-readiness.html" />
 <link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/call-readiness.html" />
@@ -30,6 +39,7 @@
 <meta name="twitter:description" content="Before a Zoom, Teams, or Google Meet call, check your camera, mic, speakers, and connection speed all at once — free." />
 <meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../css/style.css" />
 <style>
@@ -142,6 +152,9 @@
         <div class="check-body">
           <div class="check-title">Camera</div>
           <div class="check-detail" id="detailCamera">Not run</div>
+          <div class="controls" style="margin-top:8px;display:none;" id="cameraSelectRow">
+            <select class="cam-select" id="cameraSelect" aria-label="Camera to use" style="padding:8px 30px 8px 12px;font-size:0.74rem;"></select>
+          </div>
         </div>
       </div>
 
@@ -151,6 +164,9 @@
           <div class="check-title">Microphone</div>
           <div class="check-detail" id="detailMic">Not run</div>
           <div class="meter"><div class="meter-fill" id="micMeter"></div></div>
+          <div class="controls" style="margin-top:8px;display:none;" id="micSelectRow">
+            <select class="cam-select" id="micSelect" aria-label="Microphone to use" style="padding:8px 30px 8px 12px;font-size:0.74rem;"></select>
+          </div>
         </div>
       </div>
 
@@ -241,6 +257,7 @@
           <li><a href="troubleshooting.html">Troubleshooting</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>
       </div>
       <div>
@@ -251,9 +268,18 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie Settings</button></div>
   </div>
 </footer>
+
+<div class="consent-banner" id="consentBanner">
+  <p>This site uses cookies for ad delivery. See the <a href="privacy.html">Privacy Policy</a> for details.</p>
+  <div class="consent-actions">
+    <button class="btn btn-primary" id="consentAcceptBtn">Accept</button>
+    <button class="btn btn-ghost" id="consentDeclineBtn">Decline Personalized Ads</button>
+  </div>
+</div>
+
 
 <script src="../js/camera-utils.en.js"></script>
 <script>
@@ -268,6 +294,10 @@
   const playToneBtn = document.getElementById("playToneBtn");
   const heardBtn = document.getElementById("heardBtn");
   const micMeter = document.getElementById("micMeter");
+  const cameraSelect = document.getElementById("cameraSelect");
+  const cameraSelectRow = document.getElementById("cameraSelectRow");
+  const micSelect = document.getElementById("micSelect");
+  const micSelectRow = document.getElementById("micSelectRow");
 
   function setStatus(text, cls) {
     statusMsg.textContent = text;
@@ -287,10 +317,13 @@
 
   function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
 
-  async function checkCamera() {
+  async function checkCamera(deviceId) {
     setRow("Camera", "running", "Starting camera…");
     try {
-      const stream = await CamCheck.startCamera(video);
+      const constraints = deviceId
+        ? { video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false }
+        : undefined;
+      const stream = await CamCheck.startCamera(video, constraints);
       placeholder.style.display = "none";
       viewfinder.classList.add("locked");
       await sleep(500);
@@ -301,6 +334,10 @@
       } else {
         setRow("Camera", "fail", `Video captured, but brightness looks off (${label.text})`);
       }
+
+      const settings = CamCheck.readTrackSettings(stream);
+      const devices = await CamCheck.populateDeviceSelect(cameraSelect, settings ? settings.deviceId : deviceId);
+      if (devices.length > 1) cameraSelectRow.style.display = "flex";
       return true;
     } catch (err) {
       setRow("Camera", "fail", "Can't access camera: " + (err.name || err.message));
@@ -308,10 +345,19 @@
     }
   }
 
-  async function checkMic() {
+  cameraSelect.addEventListener("change", () => {
+    checkCamera(cameraSelect.value);
+  });
+
+  micSelect.addEventListener("change", () => {
+    checkMic(micSelect.value);
+  });
+
+  async function checkMic(deviceId) {
     setRow("Mic", "running", "Starting microphone… say something for a few seconds");
     try {
-      const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const constraints = deviceId ? { audio: { deviceId: { exact: deviceId } } } : { audio: true };
+      const micStream = await navigator.mediaDevices.getUserMedia(constraints);
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const source = audioCtx.createMediaStreamSource(micStream);
       const analyser = audioCtx.createAnalyser();
@@ -342,6 +388,9 @@
         sample();
       });
 
+      const micTrack = micStream.getAudioTracks()[0];
+      const micSettings = micTrack && micTrack.getSettings ? micTrack.getSettings() : {};
+
       micStream.getTracks().forEach((t) => t.stop());
       audioCtx.close();
 
@@ -350,6 +399,10 @@
       } else {
         setRow("Mic", "fail", "Barely any response. Check your microphone settings.");
       }
+
+      const devices = await CamCheck.populateMicSelect(micSelect, micSettings.deviceId || deviceId);
+      if (devices.length > 1) micSelectRow.style.display = "flex";
+
       return true;
     } catch (err) {
       setRow("Mic", "fail", "Can't access microphone: " + (err.name || err.message));
@@ -413,7 +466,7 @@
     scoreBadge.textContent = "Running…";
     setStatus("Running tests in order…");
 
-    const camOk = await checkCamera();
+    const camOk = await checkCamera(cameraSelect.value || undefined);
     const micOk = await checkMic();
     await checkSpeaker();
     const netOk = await checkNetwork();
@@ -428,6 +481,7 @@
 </script>
 
 <script src="../js/nav.js"></script>
+<script src="../js/consent.js"></script>
 
 </body>
 </html>

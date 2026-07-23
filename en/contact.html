@@ -6,6 +6,15 @@
 <title>Contact | CamCheck</title>
 <meta name="description" content="Report a bug or send a request for CamCheck." />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<script>
+(function(){
+  var c = null;
+  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
+  window.adsbygoogle = window.adsbygoogle || [];
+  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/en/contact.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/contact.html" />
 <link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/contact.html" />
@@ -29,6 +38,7 @@
 <meta name="twitter:description" content="Report a bug or send a request for CamCheck." />
 <meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../css/style.css" />
 </head>
@@ -118,6 +128,7 @@
           <li><a href="troubleshooting.html">Troubleshooting</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>
       </div>
       <div>
@@ -128,11 +139,21 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie Settings</button></div>
   </div>
 </footer>
 
+<div class="consent-banner" id="consentBanner">
+  <p>This site uses cookies for ad delivery. See the <a href="privacy.html">Privacy Policy</a> for details.</p>
+  <div class="consent-actions">
+    <button class="btn btn-primary" id="consentAcceptBtn">Accept</button>
+    <button class="btn btn-ghost" id="consentDeclineBtn">Decline Personalized Ads</button>
+  </div>
+</div>
+
+
 <script src="../js/nav.js"></script>
+<script src="../js/consent.js"></script>
 
 </body>
 </html>

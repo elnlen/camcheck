@@ -28,6 +28,7 @@
 <meta name="twitter:description" content="Every page on CamCheck: Webcam Test, Camera Info, Photo Capture, Resolution Test, and more." />
 <meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../css/style.css" />
 </head>
@@ -79,10 +80,20 @@
 </main>
 
 <footer>
-  <div class="wrap footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+  <div class="wrap footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie Settings</button></div>
 </footer>
 
+<div class="consent-banner" id="consentBanner">
+  <p>This site uses cookies for ad delivery. See the <a href="privacy.html">Privacy Policy</a> for details.</p>
+  <div class="consent-actions">
+    <button class="btn btn-primary" id="consentAcceptBtn">Accept</button>
+    <button class="btn btn-ghost" id="consentDeclineBtn">Decline Personalized Ads</button>
+  </div>
+</div>
+
+
 <script src="../js/nav.js"></script>
+<script src="../js/consent.js"></script>
 
 </body>
 </html>

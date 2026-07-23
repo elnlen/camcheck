@@ -7,6 +7,15 @@
 <meta name="description" content="Scan QR codes on the spot using your browser's camera. No app install — decoded URLs and text are processed only on this device." />
 <meta name="keywords" content="QR code scanner, scan QR code online, browser camera QR code" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<script>
+(function(){
+  var c = null;
+  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
+  window.adsbygoogle = window.adsbygoogle || [];
+  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/en/qr-scanner.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/qr-scanner.html" />
 <link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/qr-scanner.html" />
@@ -30,6 +39,7 @@
 <meta name="twitter:description" content="Scan QR codes on the spot using your browser's camera. No app install — decoded URLs and text are processed only on this device." />
 <meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../css/style.css" />
 <script type="application/ld+json">
@@ -112,6 +122,7 @@
     <div class="controls">
       <button class="btn btn-primary" id="startBtn">Start Scanning</button>
       <button class="btn btn-ghost" id="stopBtn" disabled>Stop</button>
+      <select class="cam-select" id="cameraSelect" style="display:none;" aria-label="Camera to use"></select>
       <span class="status-msg" id="statusMsg"></span>
     </div>
 
@@ -192,6 +203,7 @@
           <li><a href="troubleshooting.html">Troubleshooting</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>
       </div>
       <div>
@@ -202,11 +214,20 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie Settings</button></div>
   </div>
 </footer>
 
-<script src="../js/vendor/jsQR.js"></script>
+<div class="consent-banner" id="consentBanner">
+  <p>This site uses cookies for ad delivery. See the <a href="privacy.html">Privacy Policy</a> for details.</p>
+  <div class="consent-actions">
+    <button class="btn btn-primary" id="consentAcceptBtn">Accept</button>
+    <button class="btn btn-ghost" id="consentDeclineBtn">Decline Personalized Ads</button>
+  </div>
+</div>
+
+
+<script defer src="../js/vendor/jsQR.js"></script>
 <script src="../js/camera-utils.en.js"></script>
 <script>
 (() => {
@@ -218,6 +239,7 @@
   const stopBtn = document.getElementById("stopBtn");
   const statusMsg = document.getElementById("statusMsg");
   const hudState = document.getElementById("hudState");
+  const cameraSelect = document.getElementById("cameraSelect");
 
   const resultCard = document.getElementById("resultCard");
   const resultText = document.getElementById("resultText");
@@ -297,26 +319,48 @@
     setStatus("Scan complete", "ok");
   }
 
+  async function startWithDevice(deviceId) {
+    const constraints = deviceId
+      ? { video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false }
+      : { video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false };
+    const stream = await CamCheck.startCamera(video, constraints);
+    placeholder.style.display = "none";
+    viewfinder.classList.add("locked");
+    stopBtn.disabled = false;
+    hudState.textContent = "Scanning…";
+    setStatus("Hold the QR code inside the frame", "ok");
+    paused = false;
+    resizeOverlay();
+    rafId = requestAnimationFrame(tick);
+
+    const settings = CamCheck.readTrackSettings(stream);
+    const devices = await CamCheck.populateDeviceSelect(cameraSelect, settings ? settings.deviceId : deviceId);
+    if (devices.length > 1) cameraSelect.style.display = "";
+    cameraSelect.disabled = false;
+  }
+
   startBtn.addEventListener("click", async () => {
     setStatus("Starting camera…");
     startBtn.disabled = true;
     resultCard.style.display = "none";
     try {
-      await CamCheck.startCamera(video, {
-        video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false,
-      });
-      placeholder.style.display = "none";
-      viewfinder.classList.add("locked");
-      stopBtn.disabled = false;
-      hudState.textContent = "Scanning…";
-      setStatus("Hold the QR code inside the frame", "ok");
-      paused = false;
-      resizeOverlay();
-      rafId = requestAnimationFrame(tick);
+      await startWithDevice(cameraSelect.value || null);
     } catch (err) {
       startBtn.disabled = false;
       setStatus(err.name === "NotAllowedError" ? "Camera access was denied." : "Error: " + err.message, "error");
+    }
+  });
+
+  cameraSelect.addEventListener("change", async () => {
+    cancelAnimationFrame(rafId);
+    setStatus("Switching camera…");
+    cameraSelect.disabled = true;
+    try {
+      await startWithDevice(cameraSelect.value);
+    } catch (err) {
+      setStatus("Couldn't switch: " + (err.name || err.message), "error");
+    } finally {
+      cameraSelect.disabled = false;
     }
   });
 
@@ -351,6 +395,7 @@
 </script>
 
 <script src="../js/nav.js"></script>
+<script src="../js/consent.js"></script>
 
 </body>
 </html>

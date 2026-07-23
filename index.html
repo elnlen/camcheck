@@ -8,6 +8,14 @@
 <meta name="keywords" content="webカメラ テスト, カメラテスト オンライン, カメラ 動作確認, 解像度 チェック, カメラ 映らない" />
 <!-- ▼ AdSense: 自分のパブリッシャーIDに置き換えてください -->
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<script>
+(function(){
+  var c = null;
+  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
+  window.adsbygoogle = window.adsbygoogle || [];
+  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
+})();
+</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/" />
@@ -32,6 +40,7 @@
 <meta name="twitter:description" content="ブラウザだけでWebカメラをテスト。解像度・フレームレート・明るさをその場でチェックできる無料ツールです。インストール不要。" />
 <meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
 <script type="application/ld+json">
@@ -130,8 +139,10 @@
       <button class="btn btn-primary" id="startBtn">カメラを開始</button>
       <button class="btn" id="gridBtn" disabled>グリッド表示</button>
       <button class="btn btn-ghost" id="stopBtn" disabled>停止</button>
+      <select class="cam-select" id="cameraSelect" style="display:none;" aria-label="使用するカメラ"></select>
       <span class="status-msg" id="statusMsg"></span>
     </div>
+    <p id="cameraSelectHint" style="display:none;font-size:0.8rem;color:var(--text-faint);margin-top:8px;">前後のカメラを切り替えたり、複数台つながっている場合は使うカメラを選べます。</p>
 
     <div class="spec-sheet">
       <div class="spec-sheet-head">
@@ -257,6 +268,7 @@
           <li><a href="troubleshooting.html">トラブルシューティング</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">プライバシーポリシー</a></li>
         </ul>
       </div>
       <div>
@@ -267,9 +279,18 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom wrap" style="padding-left:0;padding-right:0;">© 2026 CamCheck. All rights reserved.</div>
+    <div class="footer-bottom wrap" style="padding-left:0;padding-right:0;">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie設定</button></div>
   </div>
 </footer>
+
+<div class="consent-banner" id="consentBanner">
+  <p>このサイトでは、広告配信のためにCookie等を使用しています。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+  <div class="consent-actions">
+    <button class="btn btn-primary" id="consentAcceptBtn">同意する</button>
+    <button class="btn btn-ghost" id="consentDeclineBtn">パーソナライズ広告を拒否</button>
+  </div>
+</div>
+
 
 <script src="js/camera-utils.js"></script>
 <script>
@@ -282,6 +303,8 @@
   const stopBtn = document.getElementById("stopBtn");
   const gridBtn = document.getElementById("gridBtn");
   const statusMsg = document.getElementById("statusMsg");
+  const cameraSelect = document.getElementById("cameraSelect");
+  const cameraSelectHint = document.getElementById("cameraSelectHint");
 
   const hudDevice = document.getElementById("hudDevice");
   const hudRes = document.getElementById("hudRes");
@@ -328,19 +351,37 @@
     specTimestamp.textContent = new Date().toLocaleTimeString("ja-JP");
   }
 
+  async function startWithDevice(deviceId) {
+    clearInterval(statsTimer);
+    const constraints = deviceId
+      ? { video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false }
+      : undefined;
+    const stream = await CamCheck.startCamera(video, constraints);
+    placeholder.style.display = "none";
+    viewfinder.classList.add("locked");
+    stopBtn.disabled = false;
+    gridBtn.disabled = false;
+    setStatus("カメラは正常に動作しています", "ok");
+
+    await updateStats(stream);
+    statsTimer = setInterval(() => updateStats(stream), 2500);
+
+    // Labels are only unlocked after permission is granted, so populate
+    // (or refresh) the picker once we actually have a live stream.
+    const settings = CamCheck.readTrackSettings(stream);
+    const devices = await CamCheck.populateDeviceSelect(cameraSelect, settings ? settings.deviceId : deviceId);
+    if (devices.length > 1) {
+      cameraSelect.style.display = "";
+      cameraSelectHint.style.display = "block";
+    }
+    cameraSelect.disabled = false;
+  }
+
   startBtn.addEventListener("click", async () => {
     setStatus("カメラを起動しています…");
     startBtn.disabled = true;
     try {
-      const stream = await CamCheck.startCamera(video);
-      placeholder.style.display = "none";
-      viewfinder.classList.add("locked");
-      stopBtn.disabled = false;
-      gridBtn.disabled = false;
-      setStatus("カメラは正常に動作しています", "ok");
-
-      await updateStats(stream);
-      statsTimer = setInterval(() => updateStats(stream), 2500);
+      await startWithDevice(cameraSelect.value || null);
     } catch (err) {
       startBtn.disabled = false;
       if (err.name === "NotAllowedError") {
@@ -361,7 +402,20 @@
     startBtn.disabled = false;
     stopBtn.disabled = true;
     gridBtn.disabled = true;
+    cameraSelect.disabled = true;
     setStatus("カメラを停止しました");
+  });
+
+  cameraSelect.addEventListener("change", async () => {
+    setStatus("カメラを切り替えています…");
+    cameraSelect.disabled = true;
+    try {
+      await startWithDevice(cameraSelect.value);
+    } catch (err) {
+      setStatus("切り替えに失敗しました: " + (err.name || err.message), "error");
+    } finally {
+      cameraSelect.disabled = false;
+    }
   });
 
   gridBtn.addEventListener("click", () => {
@@ -380,6 +434,7 @@
 </script>
 
 <script src="js/nav.js"></script>
+<script src="js/consent.js"></script>
 
 </body>
 </html>

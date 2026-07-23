@@ -7,6 +7,15 @@
 <meta name="description" content="Zoom・Teams・Google Meetなどのビデオ通話前に、カメラ・マイク・スピーカー・回線速度をまとめてチェックできる無料ツール。" />
 <meta name="keywords" content="ビデオ通話 事前チェック, zoom カメラ テスト, teams マイク テスト, 通話 前 確認" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<script>
+(function(){
+  var c = null;
+  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
+  window.adsbygoogle = window.adsbygoogle || [];
+  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/call-readiness.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/call-readiness.html" />
 <link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/call-readiness.html" />
@@ -30,6 +39,7 @@
 <meta name="twitter:description" content="Zoom・Teams・Google Meetなどのビデオ通話前に、カメラ・マイク・スピーカー・回線速度をまとめてチェックできる無料ツール。" />
 <meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
 <style>
@@ -142,6 +152,9 @@
         <div class="check-body">
           <div class="check-title">カメラ</div>
           <div class="check-detail" id="detailCamera">未実行</div>
+          <div class="controls" style="margin-top:8px;display:none;" id="cameraSelectRow">
+            <select class="cam-select" id="cameraSelect" aria-label="使用するカメラ" style="padding:8px 30px 8px 12px;font-size:0.74rem;"></select>
+          </div>
         </div>
       </div>
 
@@ -151,6 +164,9 @@
           <div class="check-title">マイク</div>
           <div class="check-detail" id="detailMic">未実行</div>
           <div class="meter"><div class="meter-fill" id="micMeter"></div></div>
+          <div class="controls" style="margin-top:8px;display:none;" id="micSelectRow">
+            <select class="cam-select" id="micSelect" aria-label="使用するマイク" style="padding:8px 30px 8px 12px;font-size:0.74rem;"></select>
+          </div>
         </div>
       </div>
 
@@ -241,6 +257,7 @@
           <li><a href="troubleshooting.html">トラブルシューティング</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">プライバシーポリシー</a></li>
         </ul>
       </div>
       <div>
@@ -248,9 +265,18 @@
         <ul><li><a href="sitemap.html">サイトマップ</a></li><li><a href="en/call-readiness.html">English</a></li></ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie設定</button></div>
   </div>
 </footer>
+
+<div class="consent-banner" id="consentBanner">
+  <p>このサイトでは、広告配信のためにCookie等を使用しています。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+  <div class="consent-actions">
+    <button class="btn btn-primary" id="consentAcceptBtn">同意する</button>
+    <button class="btn btn-ghost" id="consentDeclineBtn">パーソナライズ広告を拒否</button>
+  </div>
+</div>
+
 
 <script src="js/camera-utils.js"></script>
 <script>
@@ -265,6 +291,10 @@
   const playToneBtn = document.getElementById("playToneBtn");
   const heardBtn = document.getElementById("heardBtn");
   const micMeter = document.getElementById("micMeter");
+  const cameraSelect = document.getElementById("cameraSelect");
+  const cameraSelectRow = document.getElementById("cameraSelectRow");
+  const micSelect = document.getElementById("micSelect");
+  const micSelectRow = document.getElementById("micSelectRow");
 
   function setStatus(text, cls) {
     statusMsg.textContent = text;
@@ -284,10 +314,13 @@
 
   function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
 
-  async function checkCamera() {
+  async function checkCamera(deviceId) {
     setRow("Camera", "running", "カメラを起動しています…");
     try {
-      const stream = await CamCheck.startCamera(video);
+      const constraints = deviceId
+        ? { video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false }
+        : undefined;
+      const stream = await CamCheck.startCamera(video, constraints);
       placeholder.style.display = "none";
       viewfinder.classList.add("locked");
       await sleep(500);
@@ -298,6 +331,10 @@
       } else {
         setRow("Camera", "fail", `映像は取得できましたが明るさに問題あり（${label.text}）`);
       }
+
+      const settings = CamCheck.readTrackSettings(stream);
+      const devices = await CamCheck.populateDeviceSelect(cameraSelect, settings ? settings.deviceId : deviceId);
+      if (devices.length > 1) cameraSelectRow.style.display = "flex";
       return true;
     } catch (err) {
       setRow("Camera", "fail", "カメラにアクセスできません: " + (err.name || err.message));
@@ -305,10 +342,19 @@
     }
   }
 
-  async function checkMic() {
+  cameraSelect.addEventListener("change", () => {
+    checkCamera(cameraSelect.value);
+  });
+
+  micSelect.addEventListener("change", () => {
+    checkMic(micSelect.value);
+  });
+
+  async function checkMic(deviceId) {
     setRow("Mic", "running", "マイクを起動しています…数秒間、声を出してみてください");
     try {
-      const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const constraints = deviceId ? { audio: { deviceId: { exact: deviceId } } } : { audio: true };
+      const micStream = await navigator.mediaDevices.getUserMedia(constraints);
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const source = audioCtx.createMediaStreamSource(micStream);
       const analyser = audioCtx.createAnalyser();
@@ -339,6 +385,9 @@
         sample();
       });
 
+      const micTrack = micStream.getAudioTracks()[0];
+      const micSettings = micTrack && micTrack.getSettings ? micTrack.getSettings() : {};
+
       micStream.getTracks().forEach((t) => t.stop());
       audioCtx.close();
 
@@ -347,6 +396,10 @@
       } else {
         setRow("Mic", "fail", "ほとんど反応がありませんでした。マイクの設定を確認してください。");
       }
+
+      const devices = await CamCheck.populateMicSelect(micSelect, micSettings.deviceId || deviceId);
+      if (devices.length > 1) micSelectRow.style.display = "flex";
+
       return true;
     } catch (err) {
       setRow("Mic", "fail", "マイクにアクセスできません: " + (err.name || err.message));
@@ -410,8 +463,8 @@
     scoreBadge.textContent = "実行中…";
     setStatus("順番にテストしています…");
 
-    const camOk = await checkCamera();
-    const micOk = await checkMic();
+    const camOk = await checkCamera(cameraSelect.value || undefined);
+    const micOk = await checkMic(micSelect.value || undefined);
     await checkSpeaker();
     const netOk = await checkNetwork();
 
@@ -425,6 +478,7 @@
 </script>
 
 <script src="js/nav.js"></script>
+<script src="js/consent.js"></script>
 
 </body>
 </html>

@@ -7,6 +7,15 @@
 <meta name="description" content="Test real-time chroma key compositing right in your browser using your own green (or blue) screen backdrop and webcam — free." />
 <meta name="keywords" content="green screen test, chroma key online, camera background compositing, virtual background test" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<script>
+(function(){
+  var c = null;
+  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
+  window.adsbygoogle = window.adsbygoogle || [];
+  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/en/green-screen.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/green-screen.html" />
 <link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/green-screen.html" />
@@ -30,6 +39,7 @@
 <meta name="twitter:description" content="Test real-time chroma key compositing right in your browser using your own green (or blue) screen backdrop and webcam — free." />
 <meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../css/style.css" />
 <style>
@@ -146,6 +156,7 @@
       <button class="btn btn-primary" id="startBtn">Start Camera</button>
       <button class="btn btn-ghost" id="stopBtn" disabled>Stop</button>
       <button class="btn" id="saveBtn" disabled>Save This Frame</button>
+      <select class="cam-select" id="cameraSelect" style="display:none;" aria-label="Camera to use"></select>
       <span class="status-msg" id="statusMsg"></span>
     </div>
 
@@ -245,6 +256,7 @@
           <li><a href="troubleshooting.html">Troubleshooting</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>
       </div>
       <div>
@@ -255,9 +267,18 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie Settings</button></div>
   </div>
 </footer>
+
+<div class="consent-banner" id="consentBanner">
+  <p>This site uses cookies for ad delivery. See the <a href="privacy.html">Privacy Policy</a> for details.</p>
+  <div class="consent-actions">
+    <button class="btn btn-primary" id="consentAcceptBtn">Accept</button>
+    <button class="btn btn-ghost" id="consentDeclineBtn">Decline Personalized Ads</button>
+  </div>
+</div>
+
 
 <script src="../js/camera-utils.en.js"></script>
 <script>
@@ -270,6 +291,7 @@
   const stopBtn = document.getElementById("stopBtn");
   const saveBtn = document.getElementById("saveBtn");
   const statusMsg = document.getElementById("statusMsg");
+  const cameraSelect = document.getElementById("cameraSelect");
 
   const thresholdSlider = document.getElementById("thresholdSlider");
   const thresholdVal = document.getElementById("thresholdVal");
@@ -382,32 +404,58 @@
     rafId = requestAnimationFrame(processFrame);
   }
 
+  async function startWithDevice(deviceId) {
+    const constraints = deviceId
+      ? { video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false }
+      : undefined;
+    const stream = await CamCheck.startCamera(video, constraints);
+    placeholder.style.display = "none";
+    viewfinder.classList.add("locked");
+    stopBtn.disabled = false;
+    saveBtn.disabled = false;
+    resizeCanvases();
+    setStatus("Adjust the key color to match your background", "ok");
+    if (!rafId) rafId = requestAnimationFrame(processFrame);
+
+    const settings = CamCheck.readTrackSettings(stream);
+    const devices = await CamCheck.populateDeviceSelect(cameraSelect, settings ? settings.deviceId : deviceId);
+    if (devices.length > 1) cameraSelect.style.display = "";
+    cameraSelect.disabled = false;
+  }
+
   startBtn.addEventListener("click", async () => {
     setStatus("Starting camera…");
     startBtn.disabled = true;
     try {
-      await CamCheck.startCamera(video);
-      placeholder.style.display = "none";
-      viewfinder.classList.add("locked");
-      stopBtn.disabled = false;
-      saveBtn.disabled = false;
-      resizeCanvases();
-      setStatus("Adjust the key color to match your background", "ok");
-      rafId = requestAnimationFrame(processFrame);
+      await startWithDevice(cameraSelect.value || null);
     } catch (err) {
       startBtn.disabled = false;
       setStatus(err.name === "NotAllowedError" ? "Camera access was denied." : "Error: " + err.message, "error");
     }
   });
 
+  cameraSelect.addEventListener("change", async () => {
+    setStatus("Switching camera…");
+    cameraSelect.disabled = true;
+    try {
+      await startWithDevice(cameraSelect.value);
+    } catch (err) {
+      setStatus("Couldn't switch: " + (err.name || err.message), "error");
+    } finally {
+      cameraSelect.disabled = false;
+    }
+  });
+
   stopBtn.addEventListener("click", () => {
     cancelAnimationFrame(rafId);
+    rafId = null;
     CamCheck.stopCamera();
     viewfinder.classList.remove("locked");
     placeholder.style.display = "block";
     startBtn.disabled = false;
     stopBtn.disabled = true;
     saveBtn.disabled = true;
+    cameraSelect.disabled = true;
     setStatus("Stopped");
   });
 
@@ -477,6 +525,7 @@
 </script>
 
 <script src="../js/nav.js"></script>
+<script src="../js/consent.js"></script>
 
 </body>
 </html>

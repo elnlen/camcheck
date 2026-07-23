@@ -7,6 +7,14 @@
 <meta name="description" content="Test your webcam right in your browser. Check resolution, frame rate, and brightness instantly — free, no install required." />
 <meta name="keywords" content="webcam test, camera test online, check camera working, resolution test, camera not working" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<script>
+(function(){
+  var c = null;
+  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
+  window.adsbygoogle = window.adsbygoogle || [];
+  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
+})();
+</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/en/" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/" />
@@ -31,6 +39,7 @@
 <meta name="twitter:description" content="Test your webcam right in your browser. Check resolution, frame rate, and brightness instantly — free, no install required." />
 <meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../css/style.css" />
 <script type="application/ld+json">
@@ -129,8 +138,10 @@
       <button class="btn btn-primary" id="startBtn">Start Camera</button>
       <button class="btn" id="gridBtn" disabled>Show Grid</button>
       <button class="btn btn-ghost" id="stopBtn" disabled>Stop</button>
+      <select class="cam-select" id="cameraSelect" style="display:none;" aria-label="Camera to use"></select>
       <span class="status-msg" id="statusMsg"></span>
     </div>
+    <p id="cameraSelectHint" style="display:none;font-size:0.8rem;color:var(--text-faint);margin-top:8px;">Switch between front/rear cameras, or pick a specific one if you have more than one connected.</p>
 
     <div class="spec-sheet">
       <div class="spec-sheet-head">
@@ -256,6 +267,7 @@
           <li><a href="troubleshooting.html">Troubleshooting</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>
       </div>
       <div>
@@ -266,9 +278,18 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom wrap" style="padding-left:0;padding-right:0;">© 2026 CamCheck. All rights reserved.</div>
+    <div class="footer-bottom wrap" style="padding-left:0;padding-right:0;">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie Settings</button></div>
   </div>
 </footer>
+
+<div class="consent-banner" id="consentBanner">
+  <p>This site uses cookies for ad delivery. See the <a href="privacy.html">Privacy Policy</a> for details.</p>
+  <div class="consent-actions">
+    <button class="btn btn-primary" id="consentAcceptBtn">Accept</button>
+    <button class="btn btn-ghost" id="consentDeclineBtn">Decline Personalized Ads</button>
+  </div>
+</div>
+
 
 <script src="../js/camera-utils.en.js"></script>
 <script>
@@ -281,6 +302,8 @@
   const stopBtn = document.getElementById("stopBtn");
   const gridBtn = document.getElementById("gridBtn");
   const statusMsg = document.getElementById("statusMsg");
+  const cameraSelect = document.getElementById("cameraSelect");
+  const cameraSelectHint = document.getElementById("cameraSelectHint");
 
   const hudDevice = document.getElementById("hudDevice");
   const hudRes = document.getElementById("hudRes");
@@ -327,19 +350,35 @@
     specTimestamp.textContent = new Date().toLocaleTimeString("en-US");
   }
 
+  async function startWithDevice(deviceId) {
+    clearInterval(statsTimer);
+    const constraints = deviceId
+      ? { video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false }
+      : undefined;
+    const stream = await CamCheck.startCamera(video, constraints);
+    placeholder.style.display = "none";
+    viewfinder.classList.add("locked");
+    stopBtn.disabled = false;
+    gridBtn.disabled = false;
+    setStatus("Camera is working", "ok");
+
+    await updateStats(stream);
+    statsTimer = setInterval(() => updateStats(stream), 2500);
+
+    const settings = CamCheck.readTrackSettings(stream);
+    const devices = await CamCheck.populateDeviceSelect(cameraSelect, settings ? settings.deviceId : deviceId);
+    if (devices.length > 1) {
+      cameraSelect.style.display = "";
+      cameraSelectHint.style.display = "block";
+    }
+    cameraSelect.disabled = false;
+  }
+
   startBtn.addEventListener("click", async () => {
     setStatus("Starting camera…");
     startBtn.disabled = true;
     try {
-      const stream = await CamCheck.startCamera(video);
-      placeholder.style.display = "none";
-      viewfinder.classList.add("locked");
-      stopBtn.disabled = false;
-      gridBtn.disabled = false;
-      setStatus("Camera is working", "ok");
-
-      await updateStats(stream);
-      statsTimer = setInterval(() => updateStats(stream), 2500);
+      await startWithDevice(cameraSelect.value || null);
     } catch (err) {
       startBtn.disabled = false;
       if (err.name === "NotAllowedError") {
@@ -360,7 +399,20 @@
     startBtn.disabled = false;
     stopBtn.disabled = true;
     gridBtn.disabled = true;
+    cameraSelect.disabled = true;
     setStatus("Camera stopped");
+  });
+
+  cameraSelect.addEventListener("change", async () => {
+    setStatus("Switching camera…");
+    cameraSelect.disabled = true;
+    try {
+      await startWithDevice(cameraSelect.value);
+    } catch (err) {
+      setStatus("Couldn't switch: " + (err.name || err.message), "error");
+    } finally {
+      cameraSelect.disabled = false;
+    }
   });
 
   gridBtn.addEventListener("click", () => {
@@ -379,6 +431,7 @@
 </script>
 
 <script src="../js/nav.js"></script>
+<script src="../js/consent.js"></script>
 
 </body>
 </html>

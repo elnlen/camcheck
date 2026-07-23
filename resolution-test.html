@@ -7,6 +7,15 @@
 <meta name="description" content="720p・1080p・4Kなど複数の解像度をブラウザから順番にリクエストし、Webカメラが実際に対応している画質を確認できる無料ツール。" />
 <meta name="keywords" content="webカメラ 解像度 テスト, カメラ 1080p 確認, カメラ 画質 診断" />
 <meta name="google-adsense-account" content="ca-pub-2603828659978843" />
+<script>
+(function(){
+  var c = null;
+  try { c = localStorage.getItem('camcheck-ad-consent'); } catch (e) {}
+  window.adsbygoogle = window.adsbygoogle || [];
+  if (c !== 'personalized') { window.adsbygoogle.requestNonPersonalizedAds = 1; }
+})();
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2603828659978843" crossorigin="anonymous"></script>
 <link rel="canonical" href="https://elnlen.github.io/camcheck/resolution-test.html" />
 <link rel="alternate" hreflang="ja" href="https://elnlen.github.io/camcheck/resolution-test.html" />
 <link rel="alternate" hreflang="en" href="https://elnlen.github.io/camcheck/en/resolution-test.html" />
@@ -30,6 +39,7 @@
 <meta name="twitter:description" content="720p・1080p・4Kなど複数の解像度をブラウザから順番にリクエストし、Webカメラが実際に対応している画質を確認できる無料ツール。" />
 <meta name="twitter:image" content="https://elnlen.github.io/camcheck/assets/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
 <script type="application/ld+json">
@@ -94,6 +104,7 @@
 
     <div class="controls">
       <button class="btn btn-primary" id="startBtn">テストを開始</button>
+      <select class="cam-select" id="cameraSelect" style="display:none;" aria-label="テストするカメラ"></select>
       <span class="status-msg" id="statusMsg"></span>
     </div>
 
@@ -163,6 +174,7 @@
           <li><a href="troubleshooting.html">トラブルシューティング</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="privacy.html">プライバシーポリシー</a></li>
         </ul>
       </div>
       <div>
@@ -170,9 +182,18 @@
         <ul><li><a href="sitemap.html">サイトマップ</a></li><li><a href="en/resolution-test.html">English</a></li></ul>
       </div>
     </div>
-    <div class="footer-bottom">© 2026 CamCheck. All rights reserved.</div>
+    <div class="footer-bottom">© 2026 CamCheck. All rights reserved. ・ <button type="button" class="cookie-settings-link" id="cookieSettingsLink">Cookie設定</button></div>
   </div>
 </footer>
+
+<div class="consent-banner" id="consentBanner">
+  <p>このサイトでは、広告配信のためにCookie等を使用しています。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+  <div class="consent-actions">
+    <button class="btn btn-primary" id="consentAcceptBtn">同意する</button>
+    <button class="btn btn-ghost" id="consentDeclineBtn">パーソナライズ広告を拒否</button>
+  </div>
+</div>
+
 
 <script src="js/camera-utils.js"></script>
 <script>
@@ -183,6 +204,7 @@
   const startBtn = document.getElementById("startBtn");
   const statusMsg = document.getElementById("statusMsg");
   const progress = document.getElementById("progress");
+  const cameraSelect = document.getElementById("cameraSelect");
 
   const targets = [
     { id: "r480", w: 640, h: 480, label: "480p" },
@@ -201,8 +223,12 @@
 
   startBtn.addEventListener("click", async () => {
     startBtn.disabled = true;
+    cameraSelect.disabled = true;
     placeholder.style.display = "none";
     setStatus("テスト中…");
+
+    const chosenDeviceId = cameraSelect.value || null;
+    let lastStream = null;
 
     for (let i = 0; i < targets.length; i += 1) {
       const t = targets[i];
@@ -212,10 +238,13 @@
       el.className = "v";
 
       try {
+        const videoConstraints = { width: { ideal: t.w }, height: { ideal: t.h } };
+        if (chosenDeviceId) videoConstraints.deviceId = { exact: chosenDeviceId };
         const stream = await CamCheck.startCamera(video, {
-          video: { width: { ideal: t.w }, height: { ideal: t.h } },
+          video: videoConstraints,
           audio: false,
         });
+        lastStream = stream;
         viewfinder.classList.add("locked");
         await sleep(400);
         const settings = CamCheck.readTrackSettings(stream);
@@ -235,6 +264,13 @@
       await sleep(300);
     }
 
+    if (lastStream) {
+      const finalSettings = CamCheck.readTrackSettings(lastStream);
+      const devices = await CamCheck.populateDeviceSelect(cameraSelect, finalSettings ? finalSettings.deviceId : chosenDeviceId);
+      if (devices.length > 1) cameraSelect.style.display = "";
+    }
+    cameraSelect.disabled = false;
+
     CamCheck.stopCamera();
     setStatus("テスト完了", "ok");
     startBtn.disabled = false;
@@ -244,6 +280,7 @@
 </script>
 
 <script src="js/nav.js"></script>
+<script src="js/consent.js"></script>
 
 </body>
 </html>
